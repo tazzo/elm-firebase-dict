@@ -1,0 +1,12 @@
+var _pairshaped$elm_firebase$Firebase_Errors$WebStorageUnsupported = {ctor: 'WebStorageUnsupported'};
+var _pairshaped$elm_firebase$Firebase_Errors$UserTokenExpired = {ctor: 'UserTokenExpired'};
+var _pairshaped$elm_firebase$Firebase_Errors$UnauthorizedDomain = {ctor: 'UnauthorizedDomain'};
+var _pairshaped$elm_firebase$Firebase_Errors$TooManyRequests = {ctor: 'TooManyRequests'};
+var _pairshaped$elm_firebase$Firebase_Errors$RequiresRecentLogin = {ctor: 'RequiresRecentLogin'};
+var _pairshaped$elm_firebase$Firebase_Errors$OperationNotAllowed = {ctor: 'OperationNotAllowed'};
+var _pairshaped$elm_firebase$Firebase_Errors$NetworkRequestFailed = {ctor: 'NetworkRequestFailed'};
+var _pairshaped$elm_firebase$Firebase_Errors$InvalidUserToken = {ctor: 'InvalidUserToken'};
+var _pairshaped$elm_firebase$Firebase_Errors$InvalidApiKey = {ctor: 'InvalidApiKey'};
+var _pairshaped$elm_firebase$Firebase_Errors$ArgumentError = {ctor: 'ArgumentError'};
+var _pairshaped$elm_firebase$Firebase_Errors$AppNotAuthorized = {ctor: 'AppNotAuthorized'};
+var _pairshaped$elm_firebase$Firebase_Errors$AppDeleted = {ctor: 'AppDeleted'};

@@ -1,0 +1,16 @@
+var _tazzo$elm_markdown_math$MarkdownMath$toHtmlWith = _tazzo$elm_markdown_math$Native_MarkdownMath.toHtml;
+var _tazzo$elm_markdown_math$MarkdownMath$defaultOptions = {
+	githubFlavored: _elm_lang$core$Maybe$Just(
+		{tables: false, breaks: false}),
+	defaultHighlighting: _elm_lang$core$Maybe$Nothing,
+	sanitize: false,
+	smartypants: false
+};
+var _tazzo$elm_markdown_math$MarkdownMath$toHtml = F2(
+	function (attrs, string) {
+		return A3(_tazzo$elm_markdown_math$Native_MarkdownMath.toHtml, _tazzo$elm_markdown_math$MarkdownMath$defaultOptions, attrs, string);
+	});
+var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
+	function (a, b, c, d) {
+		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
+	});

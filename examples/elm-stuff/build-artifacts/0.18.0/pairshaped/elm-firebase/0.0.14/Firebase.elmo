@@ -1,0 +1,25 @@
+var _pairshaped$elm_firebase$Firebase$options = _pairshaped$elm_firebase$Native_Firebase.options;
+var _pairshaped$elm_firebase$Firebase$name = _pairshaped$elm_firebase$Native_Firebase.name;
+var _pairshaped$elm_firebase$Firebase$deinit = _pairshaped$elm_firebase$Native_Firebase.deinit;
+var _pairshaped$elm_firebase$Firebase$initWithName = _pairshaped$elm_firebase$Native_Firebase.initWithName;
+var _pairshaped$elm_firebase$Firebase$init = _pairshaped$elm_firebase$Native_Firebase.init;
+var _pairshaped$elm_firebase$Firebase$app = _pairshaped$elm_firebase$Native_Firebase.app;
+var _pairshaped$elm_firebase$Firebase$apps = _pairshaped$elm_firebase$Native_Firebase.apps;
+var _pairshaped$elm_firebase$Firebase$getAppByName = function (appName) {
+	return _elm_lang$core$List$head(
+		A2(
+			_elm_lang$core$List$filter,
+			function (app) {
+				return _elm_lang$core$Native_Utils.eq(
+					_pairshaped$elm_firebase$Firebase$name(app),
+					appName);
+			},
+			_pairshaped$elm_firebase$Firebase$apps(
+				{ctor: '_Tuple0'})));
+};
+var _pairshaped$elm_firebase$Firebase$sdkVersion = _pairshaped$elm_firebase$Native_Firebase.sdkVersion;
+var _pairshaped$elm_firebase$Firebase$Config = F6(
+	function (a, b, c, d, e, f) {
+		return {apiKey: a, authDomain: b, databaseURL: c, storageBucket: d, messagingSenderId: e, projectId: f};
+	});
+var _pairshaped$elm_firebase$Firebase$App = {ctor: 'App'};

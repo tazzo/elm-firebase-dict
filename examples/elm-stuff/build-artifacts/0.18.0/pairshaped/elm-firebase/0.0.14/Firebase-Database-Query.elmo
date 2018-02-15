@@ -1,0 +1,153 @@
+var _pairshaped$elm_firebase$Firebase_Database_Query_ops = _pairshaped$elm_firebase$Firebase_Database_Query_ops || {};
+_pairshaped$elm_firebase$Firebase_Database_Query_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p0) {
+				return t2;
+			},
+			t1);
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$init = _elm_lang$core$Task$succeed(
+	{
+		subs: {ctor: '[]'}
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$once = _pairshaped$elm_firebase$Native_Database_Query.once;
+var _pairshaped$elm_firebase$Firebase_Database_Query$limitToLast = _pairshaped$elm_firebase$Native_Database_Query.limitToLast;
+var _pairshaped$elm_firebase$Firebase_Database_Query$limitToFirst = _pairshaped$elm_firebase$Native_Database_Query.limitToFirst;
+var _pairshaped$elm_firebase$Firebase_Database_Query$equalTo = _pairshaped$elm_firebase$Native_Database_Query.equalTo;
+var _pairshaped$elm_firebase$Firebase_Database_Query$endAt = _pairshaped$elm_firebase$Native_Database_Query.endAt;
+var _pairshaped$elm_firebase$Firebase_Database_Query$startAt = _pairshaped$elm_firebase$Native_Database_Query.startAt;
+var _pairshaped$elm_firebase$Firebase_Database_Query$isEqual = _pairshaped$elm_firebase$Native_Database_Query.isEqual;
+var _pairshaped$elm_firebase$Firebase_Database_Query$ref = _pairshaped$elm_firebase$Native_Database_Query.ref;
+var _pairshaped$elm_firebase$Firebase_Database_Query$subscription = _elm_lang$core$Native_Platform.leaf('Firebase.Database.Query');
+var _pairshaped$elm_firebase$Firebase_Database_Query$State = function (a) {
+	return {subs: a};
+};
+var _pairshaped$elm_firebase$Firebase_Database_Query$MySub = F3(
+	function (a, b, c) {
+		return {ctor: 'MySub', _0: a, _1: b, _2: c};
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$on = F3(
+	function (event, query, tagger) {
+		return _pairshaped$elm_firebase$Firebase_Database_Query$subscription(
+			A3(_pairshaped$elm_firebase$Firebase_Database_Query$MySub, event, query, tagger));
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$subMap = F2(
+	function (func, subMsg) {
+		var _p1 = subMsg;
+		return A3(
+			_pairshaped$elm_firebase$Firebase_Database_Query$MySub,
+			_p1._0,
+			_p1._1,
+			function (_p2) {
+				return func(
+					_p1._2(_p2));
+			});
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$Update = F2(
+	function (a, b) {
+		return {ctor: 'Update', _0: a, _1: b};
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$onSelfMsg = F3(
+	function (router, selfMsg, oldState) {
+		var _p3 = selfMsg;
+		if (_p3.ctor === 'ManageSubscriptions') {
+			var removeSubscription = F2(
+				function (mySub, lastTask) {
+					var _p4 = mySub;
+					var nativeTask = F2(
+						function (event, query) {
+							return A2(_pairshaped$elm_firebase$Native_Database_Query.off, event, query);
+						});
+					return A2(
+						_pairshaped$elm_firebase$Firebase_Database_Query_ops['&>'],
+						A2(nativeTask, _p4._0, _p4._1),
+						lastTask);
+				});
+			var removeAll = function (initialState) {
+				return A3(_elm_lang$core$List$foldl, removeSubscription, initialState, _p3._0.toRemove);
+			};
+			var addSubscription = F2(
+				function (mySub, lastTask) {
+					var nativeTask = F3(
+						function (event, query, tagger) {
+							return A3(
+								_pairshaped$elm_firebase$Native_Database_Query.on,
+								event,
+								query,
+								function (snapshot) {
+									return A2(
+										_elm_lang$core$Platform$sendToSelf,
+										router,
+										A2(_pairshaped$elm_firebase$Firebase_Database_Query$Update, tagger, snapshot));
+								});
+						});
+					var _p5 = mySub;
+					return A2(
+						_pairshaped$elm_firebase$Firebase_Database_Query_ops['&>'],
+						A3(nativeTask, _p5._0, _p5._1, _p5._2),
+						lastTask);
+				});
+			var addAll = function (initialState) {
+				return A3(_elm_lang$core$List$foldl, addSubscription, initialState, _p3._0.toAdd);
+			};
+			return addAll(
+				removeAll(
+					_elm_lang$core$Task$succeed(oldState)));
+		} else {
+			return A2(
+				_pairshaped$elm_firebase$Firebase_Database_Query_ops['&>'],
+				A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					_p3._0(_p3._1)),
+				_elm_lang$core$Task$succeed(oldState));
+		}
+	});
+var _pairshaped$elm_firebase$Firebase_Database_Query$ManageSubscriptions = function (a) {
+	return {ctor: 'ManageSubscriptions', _0: a};
+};
+var _pairshaped$elm_firebase$Firebase_Database_Query$onEffects = F3(
+	function (router, newSubs, oldState) {
+		var toRemove = function () {
+			var subscribed = function (_p6) {
+				var _p7 = _p6;
+				return _elm_lang$core$List$isEmpty(
+					A2(
+						_elm_lang$core$List$filter,
+						function (_p8) {
+							var _p9 = _p8;
+							return _elm_lang$core$Native_Utils.eq(_p9._0, _p7._0) && A2(_pairshaped$elm_firebase$Firebase_Database_Query$isEqual, _p9._1, _p7._1);
+						},
+						newSubs));
+			};
+			return A2(_elm_lang$core$List$filter, subscribed, oldState.subs);
+		}();
+		var toAdd = function () {
+			var notSubscribed = function (_p10) {
+				var _p11 = _p10;
+				return _elm_lang$core$List$isEmpty(
+					A2(
+						_elm_lang$core$List$filter,
+						function (_p12) {
+							var _p13 = _p12;
+							return _elm_lang$core$Native_Utils.eq(_p13._0, _p11._0) && A2(_pairshaped$elm_firebase$Firebase_Database_Query$isEqual, _p13._1, _p11._1);
+						},
+						oldState.subs));
+			};
+			return A2(_elm_lang$core$List$filter, notSubscribed, newSubs);
+		}();
+		return A2(
+			_pairshaped$elm_firebase$Firebase_Database_Query_ops['&>'],
+			A2(
+				_elm_lang$core$Platform$sendToSelf,
+				router,
+				_pairshaped$elm_firebase$Firebase_Database_Query$ManageSubscriptions(
+					{toAdd: toAdd, toRemove: toRemove})),
+			_elm_lang$core$Task$succeed(
+				_elm_lang$core$Native_Utils.update(
+					oldState,
+					{subs: newSubs})));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Firebase.Database.Query'] = {pkg: 'pairshaped/elm-firebase', init: _pairshaped$elm_firebase$Firebase_Database_Query$init, onEffects: _pairshaped$elm_firebase$Firebase_Database_Query$onEffects, onSelfMsg: _pairshaped$elm_firebase$Firebase_Database_Query$onSelfMsg, tag: 'sub', subMap: _pairshaped$elm_firebase$Firebase_Database_Query$subMap};

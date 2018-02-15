@@ -1,0 +1,2 @@
+var _pairshaped$elm_firebase$Firebase_Database$ref = _pairshaped$elm_firebase$Native_Database.ref;
+var _pairshaped$elm_firebase$Firebase_Database$init = _pairshaped$elm_firebase$Native_Database.init;
