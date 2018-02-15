@@ -1,2 +1,0 @@
-var _pairshaped$elm_firebase$Firebase_Authentication_Types$Auth = {ctor: 'Auth'};
-var _pairshaped$elm_firebase$Firebase_Authentication_Types$User = {ctor: 'User'};

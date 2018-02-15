@@ -1,5 +1,0 @@
-var _pairshaped$elm_firebase$Firebase_Database_Types$Database = {ctor: 'Database'};
-var _pairshaped$elm_firebase$Firebase_Database_Types$Reference = {ctor: 'Reference'};
-var _pairshaped$elm_firebase$Firebase_Database_Types$Query = {ctor: 'Query'};
-var _pairshaped$elm_firebase$Firebase_Database_Types$Snapshot = {ctor: 'Snapshot'};
-var _pairshaped$elm_firebase$Firebase_Database_Types$OnDisconnect = {ctor: 'OnDisconnect'};
