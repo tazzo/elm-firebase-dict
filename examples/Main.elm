@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Dict exposing (Dict)
 import Material
 import Material.Layout as Layout
 import Material.Color as Color
@@ -30,6 +31,19 @@ type alias Model =
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
     , onText : String
+    , dict : Dict String Point
+    }
+
+
+focus =
+    { get = .dict
+    , set = \model d -> { model | dict = d }
+    }
+
+
+type alias Point =
+    { x : Float
+    , y : Float
     }
 
 
@@ -62,6 +76,7 @@ initModel =
         , app = app
         , db = db
         , onText = "init"
+        , dict = Dict.empty
         }
 
 
@@ -149,8 +164,6 @@ drawer model =
 examplesList model =
     [ Layout.title [] [ text "Examples" ]
     , button1 model
-    , button2 model
-    , button3 model
     ]
 
 
@@ -161,26 +174,6 @@ button1 model =
         [ Button.ripple
         , Options.onClick <| InputChange example1
         ]
-        [ text "Markdown Math" ]
-
-
-button2 model =
-    Button.render Mdl
-        [ 2, 2 ]
-        model.mdl
-        [ Button.ripple
-        , Options.onClick <| InputChange example2
-        ]
-        [ text "Matrix" ]
-
-
-button3 model =
-    Button.render Mdl
-        [ 2, 3 ]
-        model.mdl
-        [ Button.ripple
-        , Options.onClick <| InputChange example3
-        ]
         [ text model.onText ]
 
 
@@ -189,7 +182,7 @@ header model =
     [ Layout.row
         [ css "transition" "height 333ms ease-in-out 0s"
         ]
-        [ Layout.title [] [ text "Elm Markdown Math - Demo" ]
+        [ Layout.title [] [ text "Elm Firebase Dict Sync - Demo" ]
         ]
     ]
 
@@ -240,7 +233,17 @@ renderMessage model =
 
         -- ,Color.background (Color.color Color.Amber Color.S600)
         ]
-        [ Card.text [] [ toHtml [] model.text ]
+        [ Card.text []
+            [ Button.render Mdl
+                [ 0, 11 ]
+                model.mdl
+                [ Button.raised
+
+                --, Options.onClick MyClickMsg
+                ]
+                [ text "Raised button" ]
+            , toHtml [] model.text
+            ]
         ]
 
 
@@ -272,15 +275,9 @@ example1 =
     """
 ### Markdown Math
 
-Tex math **scriptscriptstyle** $$\\scriptscriptstyle \\int_{0}^{\\infty} e^{-x} dx$$
-
-Tex math **scriptstyle** $$\\scriptstyle \\int_{0}^{\\infty} e^{-x} dx$$
-
 Tex math **textstyle (default)** $$ \\int_{0}^{\\infty} e^{-x} dx$$
 
 Tex math **textstyle** $$\\textstyle \\int_{0}^{\\infty} e^{-x} dx$$
-
-Tex math **displaystyle** $$\\displaystyle \\int_{0}^{\\infty} e^{-x} dx$$
 
 
 #### math  with color
@@ -295,46 +292,5 @@ $$
 \\displaystyle\\lim_{x \\to \\infty} e^{-x} = 0
  $$
 
-
-"""
-
-
-example2 =
-    """
-#### Simple matrix
-
-$$
-\\begin{matrix}
-  a & b & c \\\\
-  d & e & f \\\\
-  g & h & i
- \\end{matrix}
-$$
-
-"""
-
-
-example3 =
-    """
-#### Simple function
-
-$$f(n) = n^5 + 4n^2 + 2 |_{n=17}$$
-
-#### Case function
-
-
-$$
- f(n) =
-  \\begin{cases}
-    n/2       & \\quad \\text{if } n \\text{ is even}\\\\
-    -(n+1)/2  & \\quad \\text{if } n \\text{ is odd}
- \\end{cases}
-
- $$
-
-#### Integral
-$$
-\\int_0^\\infty \\mathrm{e}^{-x}\\,\\mathrm{d}x
-$$
 
 """
