@@ -1,0 +1,33 @@
+{
+  "name": "elm-firebase-dict",
+  "version": "0.0.1",
+  "description": "elm firebase dict sync",
+  "main": "index.html",
+
+  "scripts": {
+
+    "build" : "elm-make Main.elm --output=elm-main.js",
+    "live" : "elm-live  --open --pushstate --port=8008",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "Elm",
+    "Firebase",
+    "Dict",
+    "Sync"
+  ],
+  "dependencies": {
+
+  },
+  "author": "Roberto Tazzoli",
+  "license": "MIT",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": ""
+}
