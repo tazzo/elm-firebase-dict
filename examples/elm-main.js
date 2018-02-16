@@ -15634,6 +15634,118 @@ var _debois$elm_mdl$Material_Grid$Bottom = {ctor: 'Bottom'};
 var _debois$elm_mdl$Material_Grid$Middle = {ctor: 'Middle'};
 var _debois$elm_mdl$Material_Grid$Top = {ctor: 'Top'};
 
+var _debois$elm_mdl$Material_List$action2 = _debois$elm_mdl$Material_Options$cs('mdl-list__item-secondary-action');
+var _debois$elm_mdl$Material_List$info2 = function (options) {
+	return _debois$elm_mdl$Material_Options$span(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-secondary-info'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$content2 = function (options) {
+	return _debois$elm_mdl$Material_Options$span(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-secondary-content'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$subtitle = function (options) {
+	return _debois$elm_mdl$Material_Options$span(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-sub-title'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$body = function (options) {
+	return _debois$elm_mdl$Material_Options$span(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-text-body'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$icon = F2(
+	function (i, options) {
+		return A2(
+			_debois$elm_mdl$Material_Icon$view,
+			i,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-icon'),
+				_1: options
+			});
+	});
+var _debois$elm_mdl$Material_List$avatar = _debois$elm_mdl$Material_Options$cs('mdl-list__item-avatar');
+var _debois$elm_mdl$Material_List$avatarImage = F2(
+	function (src, options) {
+		return A4(
+			_debois$elm_mdl$Material_Options$styled_,
+			_elm_lang$html$Html$img,
+			{ctor: '::', _0: _debois$elm_mdl$Material_List$avatar, _1: options},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$src(src),
+				_1: {ctor: '[]'}
+			},
+			{ctor: '[]'});
+	});
+var _debois$elm_mdl$Material_List$avatarIcon = F2(
+	function (i, options) {
+		return A2(
+			_debois$elm_mdl$Material_Options$div,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$center,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$many(options),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_List$avatar,
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Icon$i(i),
+				_1: {ctor: '[]'}
+			});
+	});
+var _debois$elm_mdl$Material_List$content = function (options) {
+	return _debois$elm_mdl$Material_Options$span(
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item-primary-content'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$withSubtitle = _debois$elm_mdl$Material_Options$cs('mdl-list__item--two-line');
+var _debois$elm_mdl$Material_List$withBody = _debois$elm_mdl$Material_Options$cs('mdl-list__item--three-line');
+var _debois$elm_mdl$Material_List$li = function (options) {
+	return A2(
+		_debois$elm_mdl$Material_Options$styled,
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list__item'),
+			_1: options
+		});
+};
+var _debois$elm_mdl$Material_List$ul = function (options) {
+	return A2(
+		_debois$elm_mdl$Material_Options$styled,
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('mdl-list'),
+			_1: options
+		});
+};
+
 /*global firebase, _elm_lang$core$Native_List, _elm_lang$core$Native_Scheduler, F2 */
 
 /*
@@ -16731,6 +16843,34 @@ var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
+var _user$project$Main$renderContents = function (model) {
+	return A2(
+		_debois$elm_mdl$Material_Card$view,
+		{
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Elevation$e8,
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Card$text,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_tazzo$elm_markdown_math$MarkdownMath$toHtml,
+						{ctor: '[]'},
+						'<h1>ciao</h1>'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$header = function (model) {
 	return {
 		ctor: '::',
@@ -16885,60 +17025,32 @@ var _user$project$Main$drawer = function (model) {
 		}
 	};
 };
-var _user$project$Main$renderMessage = function (model) {
-	return A2(
-		_debois$elm_mdl$Material_Card$view,
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-			_1: {
+var _user$project$Main$createButton = F4(
+	function (model, tagger, mdlId, txt) {
+		return A5(
+			_debois$elm_mdl$Material_Button$render,
+			_user$project$Main$Mdl,
+			{
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Elevation$e8,
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Card$text,
-				{ctor: '[]'},
-				{
+				_0: 0,
+				_1: {
 					ctor: '::',
-					_0: A5(
-						_debois$elm_mdl$Material_Button$render,
-						_user$project$Main$Mdl,
-						{
-							ctor: '::',
-							_0: 0,
-							_1: {
-								ctor: '::',
-								_0: 11,
-								_1: {ctor: '[]'}
-							}
-						},
-						model.mdl,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Button$raised,
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Raised button'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_tazzo$elm_markdown_math$MarkdownMath$toHtml,
-							{ctor: '[]'},
-							'<h1>ciao</h1>'),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
+					_0: 13,
+					_1: {ctor: '[]'}
+				}
+			},
+			model.mdl,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Button$raised,
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(txt),
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$Main$viewBody = function (model) {
 	return A2(
 		_debois$elm_mdl$Material_Grid$grid,
@@ -16954,23 +17066,115 @@ var _user$project$Main$viewBody = function (model) {
 				_debois$elm_mdl$Material_Grid$cell,
 				{
 					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
+					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
 					_1: {
 						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$Desktop, 12),
+						_0: _debois$elm_mdl$Material_Grid$stretch,
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A4(
+						_user$project$Main$createButton,
+						model,
+						_user$project$Main$Mdl,
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {
+								ctor: '::',
+								_0: 11,
+								_1: {ctor: '[]'}
+							}
+						},
+						'Push'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Grid$cell,
+					{
+						ctor: '::',
+						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
 						_1: {
 							ctor: '::',
 							_0: _debois$elm_mdl$Material_Grid$stretch,
 							_1: {ctor: '[]'}
 						}
-					}
-				},
-				{
+					},
+					{
+						ctor: '::',
+						_0: A4(
+							_user$project$Main$createButton,
+							model,
+							_user$project$Main$Mdl,
+							{
+								ctor: '::',
+								_0: 0,
+								_1: {
+									ctor: '::',
+									_0: 12,
+									_1: {ctor: '[]'}
+								}
+							},
+							'Once'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
 					ctor: '::',
-					_0: _user$project$Main$renderMessage(model),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
+					_0: A2(
+						_debois$elm_mdl$Material_Grid$cell,
+						{
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Grid$stretch,
+								_1: {ctor: '[]'}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A4(
+								_user$project$Main$createButton,
+								model,
+								_user$project$Main$Mdl,
+								{
+									ctor: '::',
+									_0: 0,
+									_1: {
+										ctor: '::',
+										_0: 13,
+										_1: {ctor: '[]'}
+									}
+								},
+								'Set'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Grid$cell,
+							{
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Grid$stretch,
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Main$renderContents(model),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
 		});
 };
 var _user$project$Main$view = function (model) {

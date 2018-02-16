@@ -11,6 +11,7 @@ import Material.Options as Options
 import Material.Options as Options exposing (css)
 import Material.Elevation as Elevation
 import Material.Button as Button
+import Material.List as Lists
 import Material.Grid exposing (stretch, grid, cell, size, order, offset, Device(..))
 import MarkdownMath exposing (toHtml)
 import Json.Decode
@@ -31,6 +32,15 @@ type alias Model =
     , db : Firebase.Database.Types.Database
     , onText : String
     }
+
+
+type Msg
+    = Mdl (Material.Msg Msg)
+    | FooValue Firebase.Database.Types.Snapshot
+
+
+type alias Mdl =
+    Material.Model
 
 
 initModel : Model
@@ -62,11 +72,6 @@ initModel =
         , db = db
         , onText = "init"
         }
-
-
-type Msg
-    = Mdl (Material.Msg Msg)
-    | FooValue Firebase.Database.Types.Snapshot
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,10 +108,6 @@ update msg model =
                 ( { model | onText = str }
                 , Cmd.none
                 )
-
-
-type alias Mdl =
-    Material.Model
 
 
 view : Model -> Html Msg
@@ -165,16 +166,30 @@ viewBody : Model -> Html Msg
 viewBody model =
     grid [ Color.background (Color.color Color.Grey Color.S100) ]
         [ cell
-            [ size All 12
-            , size Desktop 12
+            [ size All 1
             , stretch
             ]
-            [ renderMessage model ]
+            [ createButton model Mdl [ 0, 11 ] "Push" ]
+        , cell
+            [ size All 1
+            , stretch
+            ]
+            [ createButton model Mdl [ 0, 12 ] "Once" ]
+        , cell
+            [ size All 1
+            , stretch
+            ]
+            [ createButton model Mdl [ 0, 13 ] "Set" ]
+        , cell
+            [ size All 12
+            , stretch
+            ]
+            [ renderContents model ]
         ]
 
 
-renderMessage : Model -> Html Msg
-renderMessage model =
+renderContents : Model -> Html Msg
+renderContents model =
     Card.view
         [ css "width" "100%"
         , Elevation.e8
@@ -182,17 +197,20 @@ renderMessage model =
         -- ,Color.background (Color.color Color.Amber Color.S600)
         ]
         [ Card.text []
-            [ Button.render Mdl
-                [ 0, 11 ]
-                model.mdl
-                [ Button.raised
-
-                --, Options.onClick MyClickMsg
-                ]
-                [ text "Raised button" ]
-            , toHtml [] "<h1>ciao</h1>"
+            [ toHtml [] "<h1>ciao</h1>"
             ]
         ]
+
+
+createButton model tagger mdlId txt =
+    Button.render Mdl
+        [ 0, 13 ]
+        model.mdl
+        [ Button.raised
+
+        --, Options.onClick MyClickMsg
+        ]
+        [ text txt ]
 
 
 subscriptions : Model -> Sub Msg
