@@ -1,6 +1,6 @@
 {
-  "short_name": "Markdown Math",
-  "name": "Elm Markdown Math Demo",
+  "short_name": "Elm Firebase Dict",
+  "name": "Elm Firebase Dict Sync Demo ",
   "icons": [
     {
       "src": "dist/logo-48.png",
