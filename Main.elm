@@ -30,6 +30,7 @@ type alias Model =
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
     , onText : String
+    , tmp : Bool
     }
 
 
@@ -62,6 +63,7 @@ initModel =
         , app = app
         , db = db
         , onText = "init"
+        , tmp = True
         }
 
 
@@ -105,7 +107,7 @@ update msg model =
 
                 -- Output the result (either `Err decodeMessage` or `Ok value`)
             in
-                ( { model | onText = str }
+                ( { model | onText = str, tmp = False }
                 , Cmd.none
                 )
 
@@ -252,10 +254,23 @@ subscriptions model =
             model.db
                 |> Firebase.Database.ref (Just "foo")
     in
-        Sub.batch
-            [ Layout.subs Mdl model.mdl
-            , Firebase.Database.Reference.on "value" fooRef FooValue
-            ]
+        if model.tmp then
+            let
+                _ =
+                    Debug.log "subscriptions " "True"
+            in
+                Sub.batch
+                    [ Layout.subs Mdl model.mdl
+                    , Firebase.Database.Reference.on "value" fooRef FooValue
+                    ]
+        else
+            let
+                _ =
+                    Debug.log "subscriptions " "False"
+            in
+                Sub.batch
+                    [ Layout.subs Mdl model.mdl
+                    ]
 
 
 main : Program Never Model Msg
