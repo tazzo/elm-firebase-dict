@@ -27,11 +27,9 @@ import Firebase.Database.Snapshot
 
 type alias Model =
     { mdl : Mdl
-    , text : String
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
     , onText : String
-    , tmp : Bool
     }
 
 
@@ -60,17 +58,14 @@ initModel =
     in
         { mdl =
             Material.model
-        , text = example1
         , app = app
         , db = db
         , onText = "init"
-        , tmp = True
         }
 
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | InputChange String
     | FooValue Firebase.Database.Types.Snapshot
 
 
@@ -80,9 +75,6 @@ update msg model =
         -- Boilerplate: Mdl action handler.
         Mdl msg_ ->
             Material.update Mdl msg_ model
-
-        InputChange str ->
-            ( { model | text = str }, Cmd.none )
 
         FooValue snapshot ->
             let
@@ -108,7 +100,7 @@ update msg model =
 
                 -- Output the result (either `Err decodeMessage` or `Ok value`)
             in
-                ( { model | onText = str, tmp = False }
+                ( { model | onText = str }
                 , Cmd.none
                 )
 
@@ -135,23 +127,16 @@ drawer : Model -> List (Html Msg)
 drawer model =
     [ Layout.navigation
         []
-        (examplesList model)
+        [ Layout.title [] [ text "Examples" ]
+        , button1 model
+        ]
     , Layout.navigation
         []
         [ Layout.title [] [ text "Github" ]
         , Layout.link
-            [ Layout.href "https://github.com/tazzo/elm-markdown-math" ]
-            [ text "elm-markdown-math" ]
-        , Layout.link
-            [ Layout.href "https://github.com/tazzo/elm-markdown-math-demo" ]
-            [ text "demo" ]
+            [ Layout.href "https://github.com/tazzo/elm-firebase-dict" ]
+            [ text "elm-firebase-dict" ]
         ]
-    ]
-
-
-examplesList model =
-    [ Layout.title [] [ text "Examples" ]
-    , button1 model
     ]
 
 
@@ -160,7 +145,8 @@ button1 model =
         [ 2, 1 ]
         model.mdl
         [ Button.ripple
-        , Options.onClick <| InputChange example1
+
+        -- , Options.onClick <| InputChange example1
         ]
         [ text model.onText ]
 
@@ -179,38 +165,12 @@ viewBody : Model -> Html Msg
 viewBody model =
     grid [ Color.background (Color.color Color.Grey Color.S100) ]
         [ cell
-            [ size All 8
-            , size Desktop 6
+            [ size All 12
+            , size Desktop 12
             , stretch
             ]
             [ renderMessage model ]
-        , cell
-            [ size All 8
-            , size Desktop 6
-            , stretch
-            ]
-            [ tf model ]
         ]
-
-
-tf : Model -> Html Msg
-tf model =
-    Textfield.render Mdl
-        [ 0, 9 ]
-        model.mdl
-        [ css "width" "100%"
-        , css "padding-left" "10px"
-        , css "padding-right" "10px"
-        , Textfield.label "Enter Markdown and Math here"
-        , Textfield.floatingLabel
-        , Textfield.textarea
-        , Textfield.rows 20
-        , Textfield.value model.text
-        , Options.onInput InputChange
-        , Color.background Color.white
-        , Elevation.e8
-        ]
-        []
 
 
 renderMessage : Model -> Html Msg
@@ -230,7 +190,7 @@ renderMessage model =
                 --, Options.onClick MyClickMsg
                 ]
                 [ text "Raised button" ]
-            , toHtml [] model.text
+            , toHtml [] "<h1>ciao</h1>"
             ]
         ]
 
@@ -243,23 +203,10 @@ subscriptions model =
             model.db
                 |> Firebase.Database.ref (Just "foo")
     in
-        if model.tmp then
-            let
-                _ =
-                    Debug.log "subscriptions " "True"
-            in
-                Sub.batch
-                    [ Layout.subs Mdl model.mdl
-                    , Firebase.Database.Reference.on "value" fooRef FooValue
-                    ]
-        else
-            let
-                _ =
-                    Debug.log "subscriptions " "False"
-            in
-                Sub.batch
-                    [ Layout.subs Mdl model.mdl
-                    ]
+        Sub.batch
+            [ Layout.subs Mdl model.mdl
+            , Firebase.Database.Reference.on "value" fooRef FooValue
+            ]
 
 
 main : Program Never Model Msg
@@ -270,28 +217,3 @@ main =
         , subscriptions = subscriptions
         , update = update
         }
-
-
-example1 =
-    """
-### Markdown Math
-
-Tex math **textstyle (default)** $$ \\int_{0}^{\\infty} e^{-x} dx$$
-
-Tex math **textstyle** $$\\textstyle \\int_{0}^{\\infty} e^{-x} dx$$
-
-
-#### math  with color
-$$
- \\color{red}{
-x^2-3 \\over x+1 }+123
-
- $$
-
-#### limit
-$$
-\\displaystyle\\lim_{x \\to \\infty} e^{-x} = 0
- $$
-
-
-"""

@@ -16731,7 +16731,6 @@ var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
-var _user$project$Main$example1 = '\n### Markdown Math\n\nTex math **textstyle (default)** $$ \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **textstyle** $$\\textstyle \\int_{0}^{\\infty} e^{-x} dx$$\n\n\n#### math  with color\n$$\n \\color{red}{\nx^2-3 \\over x+1 }+123\n\n $$\n\n#### limit\n$$\n\\displaystyle\\lim_{x \\to \\infty} e^{-x} = 0\n $$\n\n\n';
 var _user$project$Main$header = function (model) {
 	return {
 		ctor: '::',
@@ -16761,32 +16760,14 @@ var _user$project$Main$initModel = function () {
 	var app = _pairshaped$elm_firebase$Firebase$init(
 		{apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'});
 	var db = _pairshaped$elm_firebase$Firebase_Database$init(app);
-	return {mdl: _debois$elm_mdl$Material$model, text: _user$project$Main$example1, app: app, db: db, onText: 'init', dict: _elm_lang$core$Dict$empty};
+	return {mdl: _debois$elm_mdl$Material$model, app: app, db: db, onText: 'init'};
 }();
-var _user$project$Main$focus = {
-	get: function (_) {
-		return _.dict;
-	},
-	set: F2(
-		function (model, d) {
-			return _elm_lang$core$Native_Utils.update(
-				model,
-				{dict: d});
-		})
-};
-var _user$project$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {mdl: a, text: b, app: c, db: d, onText: e, dict: f};
-	});
-var _user$project$Main$Point = F2(
-	function (a, b) {
-		return {x: a, y: b};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {mdl: a, app: b, db: c, onText: d};
 	});
 var _user$project$Main$FooValue = function (a) {
 	return {ctor: 'FooValue', _0: a};
-};
-var _user$project$Main$InputChange = function (a) {
-	return {ctor: 'InputChange', _0: a};
 };
 var _user$project$Main$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
@@ -16794,40 +16775,31 @@ var _user$project$Main$Mdl = function (a) {
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'Mdl':
-				return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
-			case 'InputChange':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{text: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				var value = A2(
-					_elm_lang$core$Debug$log,
-					'FooValue.value.result',
-					A2(
-						_elm_lang$core$Json_Decode$decodeValue,
-						_elm_lang$core$Json_Decode$string,
-						_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
-				var str = function () {
-					var _p1 = value;
-					if (_p1.ctor === 'Ok') {
-						return _p1._0;
-					} else {
-						return _p1._0;
-					}
-				}();
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{onText: str}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+		if (_p0.ctor === 'Mdl') {
+			return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
+		} else {
+			var value = A2(
+				_elm_lang$core$Debug$log,
+				'FooValue.value.result',
+				A2(
+					_elm_lang$core$Json_Decode$decodeValue,
+					_elm_lang$core$Json_Decode$string,
+					_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
+			var str = function () {
+				var _p1 = value;
+				if (_p1.ctor === 'Ok') {
+					return _p1._0;
+				} else {
+					return _p1._0;
+				}
+			}();
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{onText: str}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
 		}
 	});
 var _user$project$Main$button1 = function (model) {
@@ -16847,12 +16819,7 @@ var _user$project$Main$button1 = function (model) {
 		{
 			ctor: '::',
 			_0: _debois$elm_mdl$Material_Button$ripple,
-			_1: {
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Options$onClick(
-					_user$project$Main$InputChange(_user$project$Main$example1)),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
@@ -16860,31 +16827,28 @@ var _user$project$Main$button1 = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$examplesList = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_debois$elm_mdl$Material_Layout$title,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Examples'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: _user$project$Main$button1(model),
-			_1: {ctor: '[]'}
-		}
-	};
-};
 var _user$project$Main$drawer = function (model) {
 	return {
 		ctor: '::',
 		_0: A2(
 			_debois$elm_mdl$Material_Layout$navigation,
 			{ctor: '[]'},
-			_user$project$Main$examplesList(model)),
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Layout$title,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Examples'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$button1(model),
+					_1: {ctor: '[]'}
+				}
+			}),
 		_1: {
 			ctor: '::',
 			_0: A2(
@@ -16906,96 +16870,20 @@ var _user$project$Main$drawer = function (model) {
 							_debois$elm_mdl$Material_Layout$link,
 							{
 								ctor: '::',
-								_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-markdown-math'),
+								_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-firebase-dict'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('elm-markdown-math'),
+								_0: _elm_lang$html$Html$text('elm-firebase-dict'),
 								_1: {ctor: '[]'}
 							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_debois$elm_mdl$Material_Layout$link,
-								{
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-markdown-math-demo'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('demo'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {ctor: '[]'}
 		}
 	};
-};
-var _user$project$Main$tf = function (model) {
-	return A5(
-		_debois$elm_mdl$Material_Textfield$render,
-		_user$project$Main$Mdl,
-		{
-			ctor: '::',
-			_0: 0,
-			_1: {
-				ctor: '::',
-				_0: 9,
-				_1: {ctor: '[]'}
-			}
-		},
-		model.mdl,
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-			_1: {
-				ctor: '::',
-				_0: A2(_debois$elm_mdl$Material_Options$css, 'padding-left', '10px'),
-				_1: {
-					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Options$css, 'padding-right', '10px'),
-					_1: {
-						ctor: '::',
-						_0: _debois$elm_mdl$Material_Textfield$label('Enter Markdown and Math here'),
-						_1: {
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Textfield$floatingLabel,
-							_1: {
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Textfield$textarea,
-								_1: {
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Textfield$rows(20),
-									_1: {
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Textfield$value(model.text),
-										_1: {
-											ctor: '::',
-											_0: _debois$elm_mdl$Material_Options$onInput(_user$project$Main$InputChange),
-											_1: {
-												ctor: '::',
-												_0: _debois$elm_mdl$Material_Color$background(_debois$elm_mdl$Material_Color$white),
-												_1: {
-													ctor: '::',
-													_0: _debois$elm_mdl$Material_Elevation$e8,
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		{ctor: '[]'});
 };
 var _user$project$Main$renderMessage = function (model) {
 	return A2(
@@ -17044,7 +16932,7 @@ var _user$project$Main$renderMessage = function (model) {
 						_0: A2(
 							_tazzo$elm_markdown_math$MarkdownMath$toHtml,
 							{ctor: '[]'},
-							model.text),
+							'<h1>ciao</h1>'),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -17066,10 +16954,10 @@ var _user$project$Main$viewBody = function (model) {
 				_debois$elm_mdl$Material_Grid$cell,
 				{
 					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 8),
+					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
 					_1: {
 						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$Desktop, 6),
+						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$Desktop, 12),
 						_1: {
 							ctor: '::',
 							_0: _debois$elm_mdl$Material_Grid$stretch,
@@ -17082,30 +16970,7 @@ var _user$project$Main$viewBody = function (model) {
 					_0: _user$project$Main$renderMessage(model),
 					_1: {ctor: '[]'}
 				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Grid$cell,
-					{
-						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 8),
-						_1: {
-							ctor: '::',
-							_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$Desktop, 6),
-							_1: {
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Grid$stretch,
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _user$project$Main$tf(model),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Main$view = function (model) {
