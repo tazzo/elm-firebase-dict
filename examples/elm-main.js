@@ -15833,30 +15833,34 @@ var _pairshaped$elm_firebase$Native_Shared = function () {
     }
   }
 
+  // shorthand for native APIs
+  var nativeBinding = _elm_lang$core$Native_Scheduler.nativeBinding;
+  var succeed = _elm_lang$core$Native_Scheduler.succeed;
 
   var sourceOnSnapshot = function (eventType, source, tagger) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       source.on(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot.bind(window, tagger))
 
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
+      callback(succeed({ ctor: "_Tuple0" }))
     })
   }
 
 
   var sourceOffSnapshot = function (eventType, source) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
-      source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
+    return nativeBinding(function (callback) {
+      source.off(eventType)
+      //source.off(eventType, _pairshaped$elm_firebase$Native_Shared$onSnapshot)
 
-      callback(_elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" }))
+      callback(succeed({ ctor: "_Tuple0" }))
     })
   }
 
 
   var sourceOnceSnapshot = function (eventType, source) {
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       source.once(eventType, function (snapshot) {
         callback(
-          _elm_lang$core$Native_Scheduler.succeed(
+          succeed(
             _pairshaped$elm_firebase$Native_Shared.snapshotToModel(snapshot)
           )
         )
@@ -16015,6 +16019,14 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     // console.log.apply(console, args)
   }
 
+  // shorthand for native APIs
+  var unit = {ctor: '_Tuple0'};
+  var nativeBinding = _elm_lang$core$Native_Scheduler.nativeBinding;
+  var succeed = _elm_lang$core$Native_Scheduler.succeed;
+  var fail = _elm_lang$core$Native_Scheduler.fail;
+
+  // shorthand for shared APIs
+  var nativeShared = _pairshaped$elm_firebase$Native_Shared;
 
   // Reference methods
 
@@ -16037,25 +16049,25 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".child", path, refModel)
     var reference = refModel.reference().child(path)
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(reference)
+    return nativeShared.referenceToModel(reference)
   }
 
 
   var set = function (json, refModel) {
     debug(".set", json, refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel
         .reference()
         .set(json)
         .then(function () {
           callback(
-              _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+              succeed(unit)
             )
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              fail(nativeShared.errorToModel(err))
             )
         })
     })
@@ -16065,18 +16077,18 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
   var update = function (json, refModel) {
     debug(".update", json, refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel
         .reference()
         .update(json)
         .then(function () {
           callback(
-            _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+            succeed(unit)
           )
         })
         .catch(function (err) {
           callback(
-              _elm_lang$core$Native_Scheduler.fail(_pairshaped$elm_firebase$Native_Shared.errorToModel(err))
+              fail(nativeShared.errorToModel(err))
             )
         })
     })
@@ -16087,17 +16099,17 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".remove", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.referenceToModel(ref.push())
+    return nativeShared.referenceToModel(ref.push())
   }
 
 
   var remove = function (refModel) {
     debug(".remove", refModel)
 
-    return _elm_lang$core$Native_Scheduler.nativeBinding(function (callback) {
+    return nativeBinding(function (callback) {
       refModel.reference().remove(function () {
         callback(
-          _elm_lang$core$Native_Scheduler.succeed({ ctor: "_Tuple0" })
+          succeed(unit)
         )
       })
     })
@@ -16108,7 +16120,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByChild", path, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByChild(path)
     )
   }
@@ -16118,7 +16130,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByKey", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByKey()
     )
   }
@@ -16128,7 +16140,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByPriority", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByPriority()
     )
   }
@@ -16138,7 +16150,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".orderByValue", refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.queryToModel(
+    return nativeShared.queryToModel(
       ref.orderByValue()
     )
   }
@@ -16170,7 +16182,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".once", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnceSnapshot(eventType, ref)
+    return nativeShared.sourceOnceSnapshot(eventType, ref)
   }
 
 
@@ -16178,7 +16190,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".on", eventType, refModel, tagger)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOnSnapshot(eventType, ref, tagger)
+    return nativeShared.sourceOnSnapshot(eventType, ref, tagger)
   }
 
 
@@ -16186,7 +16198,7 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     debug(".off", eventType, refModel)
     var ref = refModel.reference()
 
-    return _pairshaped$elm_firebase$Native_Shared.sourceOffSnapshot(eventType, ref)
+    return nativeShared.sourceOffSnapshot(eventType, ref)
   }
 
   var isEqual = function (refModelA, refModelB) {
@@ -16219,7 +16231,6 @@ var _pairshaped$elm_firebase$Native_Database_Reference = function () { // eslint
     "isEqual": F2(isEqual)
   }
 }()
-
 
 var _pairshaped$elm_firebase$Firebase_Database_Reference_ops = _pairshaped$elm_firebase$Firebase_Database_Reference_ops || {};
 _pairshaped$elm_firebase$Firebase_Database_Reference_ops['&>'] = F2(
@@ -16720,37 +16731,7 @@ var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
-var _user$project$Main$example3 = '\n#### Simple function\n\n$$f(n) = n^5 + 4n^2 + 2 |_{n=17}$$\n\n#### Case function\n\n\n$$\n f(n) =\n  \\begin{cases}\n    n/2       & \\quad \\text{if } n \\text{ is even}\\\\\n    -(n+1)/2  & \\quad \\text{if } n \\text{ is odd}\n \\end{cases}\n\n $$\n\n#### Integral\n$$\n\\int_0^\\infty \\mathrm{e}^{-x}\\,\\mathrm{d}x\n$$\n\n';
-var _user$project$Main$example2 = '\n#### Simple matrix\n\n$$\n\\begin{matrix}\n  a & b & c \\\\\n  d & e & f \\\\\n  g & h & i\n \\end{matrix}\n$$\n\n';
-var _user$project$Main$example1 = '\n### Markdown Math\n\nTex math **scriptscriptstyle** $$\\scriptscriptstyle \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **scriptstyle** $$\\scriptstyle \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **textstyle (default)** $$ \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **textstyle** $$\\textstyle \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **displaystyle** $$\\displaystyle \\int_{0}^{\\infty} e^{-x} dx$$\n\n\n#### math  with color\n$$\n \\color{red}{\nx^2-3 \\over x+1 }+123\n\n $$\n\n#### limit\n$$\n\\displaystyle\\lim_{x \\to \\infty} e^{-x} = 0\n $$\n\n\n';
-var _user$project$Main$renderMessage = function (model) {
-	return A2(
-		_debois$elm_mdl$Material_Card$view,
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-			_1: {
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Elevation$e8,
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Card$text,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_tazzo$elm_markdown_math$MarkdownMath$toHtml,
-						{ctor: '[]'},
-						model.text),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
+var _user$project$Main$example1 = '\n### Markdown Math\n\nTex math **textstyle (default)** $$ \\int_{0}^{\\infty} e^{-x} dx$$\n\nTex math **textstyle** $$\\textstyle \\int_{0}^{\\infty} e^{-x} dx$$\n\n\n#### math  with color\n$$\n \\color{red}{\nx^2-3 \\over x+1 }+123\n\n $$\n\n#### limit\n$$\n\\displaystyle\\lim_{x \\to \\infty} e^{-x} = 0\n $$\n\n\n';
 var _user$project$Main$header = function (model) {
 	return {
 		ctor: '::',
@@ -16768,7 +16749,7 @@ var _user$project$Main$header = function (model) {
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Elm Markdown Math - Demo'),
+						_0: _elm_lang$html$Html$text('Elm Firebase Dict Sync - Demo'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -16780,11 +16761,26 @@ var _user$project$Main$initModel = function () {
 	var app = _pairshaped$elm_firebase$Firebase$init(
 		{apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'});
 	var db = _pairshaped$elm_firebase$Firebase_Database$init(app);
-	return {mdl: _debois$elm_mdl$Material$model, text: _user$project$Main$example1, app: app, db: db, onText: 'init'};
+	return {mdl: _debois$elm_mdl$Material$model, text: _user$project$Main$example1, app: app, db: db, onText: 'init', dict: _elm_lang$core$Dict$empty};
 }();
-var _user$project$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {mdl: a, text: b, app: c, db: d, onText: e};
+var _user$project$Main$focus = {
+	get: function (_) {
+		return _.dict;
+	},
+	set: F2(
+		function (model, d) {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{dict: d});
+		})
+};
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {mdl: a, text: b, app: c, db: d, onText: e, dict: f};
+	});
+var _user$project$Main$Point = F2(
+	function (a, b) {
+		return {x: a, y: b};
 	});
 var _user$project$Main$FooValue = function (a) {
 	return {ctor: 'FooValue', _0: a};
@@ -16860,66 +16856,6 @@ var _user$project$Main$button1 = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Markdown Math'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$button2 = function (model) {
-	return A5(
-		_debois$elm_mdl$Material_Button$render,
-		_user$project$Main$Mdl,
-		{
-			ctor: '::',
-			_0: 2,
-			_1: {
-				ctor: '::',
-				_0: 2,
-				_1: {ctor: '[]'}
-			}
-		},
-		model.mdl,
-		{
-			ctor: '::',
-			_0: _debois$elm_mdl$Material_Button$ripple,
-			_1: {
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Options$onClick(
-					_user$project$Main$InputChange(_user$project$Main$example2)),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Matrix'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$button3 = function (model) {
-	return A5(
-		_debois$elm_mdl$Material_Button$render,
-		_user$project$Main$Mdl,
-		{
-			ctor: '::',
-			_0: 2,
-			_1: {
-				ctor: '::',
-				_0: 3,
-				_1: {ctor: '[]'}
-			}
-		},
-		model.mdl,
-		{
-			ctor: '::',
-			_0: _debois$elm_mdl$Material_Button$ripple,
-			_1: {
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Options$onClick(
-					_user$project$Main$InputChange(_user$project$Main$example3)),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
 			_0: _elm_lang$html$Html$text(model.onText),
 			_1: {ctor: '[]'}
 		});
@@ -16938,15 +16874,7 @@ var _user$project$Main$examplesList = function (model) {
 		_1: {
 			ctor: '::',
 			_0: _user$project$Main$button1(model),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$button2(model),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$button3(model),
-					_1: {ctor: '[]'}
-				}
-			}
+			_1: {ctor: '[]'}
 		}
 	};
 };
@@ -17068,6 +16996,60 @@ var _user$project$Main$tf = function (model) {
 			}
 		},
 		{ctor: '[]'});
+};
+var _user$project$Main$renderMessage = function (model) {
+	return A2(
+		_debois$elm_mdl$Material_Card$view,
+		{
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Elevation$e8,
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Card$text,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A5(
+						_debois$elm_mdl$Material_Button$render,
+						_user$project$Main$Mdl,
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {
+								ctor: '::',
+								_0: 11,
+								_1: {ctor: '[]'}
+							}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Button$raised,
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Raised button'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_tazzo$elm_markdown_math$MarkdownMath$toHtml,
+							{ctor: '[]'},
+							model.text),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$viewBody = function (model) {
 	return A2(

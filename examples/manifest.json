@@ -3,17 +3,17 @@
   "name": "Elm Markdown Math Demo",
   "icons": [
     {
-      "src": "static/logo-1x.png",
+      "src": "dist/logo-48.png",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "static/logo-2x.png",
+      "src": "dist/logo-96.png",
       "type": "image/png",
       "sizes": "96x96"
     },
     {
-      "src": "static/logo-4x.png",
+      "src": "dist/logo-192.png",
       "type": "image/png",
       "sizes": "192x192"
     }
