@@ -104,26 +104,26 @@ update msg model =
                 {-
                    This decodes the value of "/foo" as a string.
                 -}
-                value : Result String String
+                value : Result String Config.Config
                 value =
                     snapshot
                         |> Firebase.Database.Snapshot.value
                         -- Gives us a Json.Decode.Value
-                        |> JD.decodeValue JD.string
+                        |> JD.decodeValue Config.configDecoder
                         -- Convert into a Result String a (where a is a String)
                         |> Debug.log "FooValue.value.result"
 
-                str =
+                c =
                     case value of
-                        Ok str ->
-                            str
+                        Ok c ->
+                            c
 
                         Err str ->
-                            str
+                            model.config
 
                 -- Output the result (either `Err decodeMessage` or `Ok value`)
             in
-                ( { model | onText = str }
+                ( { model | config = c }
                 , Cmd.none
                 )
 

@@ -16983,21 +16983,21 @@ var _user$project$Main$update = F2(
 					'FooValue.value.result',
 					A2(
 						_elm_lang$core$Json_Decode$decodeValue,
-						_elm_lang$core$Json_Decode$string,
+						_user$project$Config$configDecoder,
 						_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
-				var str = function () {
+				var c = function () {
 					var _p1 = value;
 					if (_p1.ctor === 'Ok') {
 						return _p1._0;
 					} else {
-						return _p1._0;
+						return model.config;
 					}
 				}();
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{onText: str}),
+						{config: c}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Push':
