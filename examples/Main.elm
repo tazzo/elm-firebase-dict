@@ -4,6 +4,7 @@ import Html exposing (..)
 import Dict exposing (Dict)
 import Material
 import Material.Layout as Layout
+import Material.Toggles as Toggles
 import Material.Color as Color
 import Material.Card as Card
 import Material.Textfield as Textfield
@@ -26,17 +27,29 @@ import Firebase.Database.Reference
 import Firebase.Database.Snapshot
 
 
+-- Config
+
+import Config
+
+
 type alias Model =
     { mdl : Mdl
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
     , onText : String
+    , config : Config.Config
     }
 
 
 type Msg
     = Mdl (Material.Msg Msg)
     | FooValue Firebase.Database.Types.Snapshot
+    | Push
+    | Set
+    | Get
+    | MyToggleMsg
+    | ChangeStringMsg String
+    | ChangeIntMsg String
 
 
 type alias Mdl =
@@ -71,6 +84,7 @@ initModel =
         , app = app
         , db = db
         , onText = "init"
+        , config = Config.empty
         }
 
 
@@ -108,6 +122,41 @@ update msg model =
                 ( { model | onText = str }
                 , Cmd.none
                 )
+
+        Push ->
+            ( model, Cmd.none )
+
+        Set ->
+            ( model, Cmd.none )
+
+        Get ->
+            ( model, Cmd.none )
+
+        MyToggleMsg ->
+            let
+                toggle c =
+                    { c | bool = not c.bool }
+            in
+                ( { model | config = (toggle model.config) }, Cmd.none )
+
+        ChangeStringMsg str ->
+            let
+                change c =
+                    { c | string = str }
+            in
+                ( { model | config = (change model.config) }, Cmd.none )
+
+        ChangeIntMsg str ->
+            let
+                change c =
+                    case String.toInt str of
+                        Ok i ->
+                            { c | int = i }
+
+                        Err s ->
+                            c
+            in
+                ( { model | config = (change model.config) }, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -169,17 +218,17 @@ viewBody model =
             [ size All 1
             , stretch
             ]
-            [ createButton model Mdl [ 0, 11 ] "Push" ]
+            [ createButton model Mdl [ 0, 11 ] "Push" Push ]
         , cell
             [ size All 1
             , stretch
             ]
-            [ createButton model Mdl [ 0, 12 ] "Once" ]
+            [ createButton model Mdl [ 0, 12 ] "Once" Get ]
         , cell
             [ size All 1
             , stretch
             ]
-            [ createButton model Mdl [ 0, 13 ] "Set" ]
+            [ createButton model Mdl [ 0, 13 ] "Set" Set ]
         , cell
             [ size All 12
             , stretch
@@ -197,18 +246,62 @@ renderContents model =
         -- ,Color.background (Color.color Color.Amber Color.S600)
         ]
         [ Card.text []
-            [ toHtml [] "<h1>ciao</h1>"
+            [ toHtml [] (toString model.config)
+            , renderConfig model
             ]
         ]
 
 
-createButton model tagger mdlId txt =
+renderConfig : Model -> Html Msg
+renderConfig model =
+    Lists.ul []
+        [ Lists.li []
+            [ Lists.content []
+                [ Toggles.switch Mdl
+                    [ 0, 1, 3 ]
+                    model.mdl
+                    [ Options.onToggle MyToggleMsg
+                    , Toggles.ripple
+                    , Toggles.value model.config.bool
+                    ]
+                    [ text "bool" ]
+                ]
+            ]
+        , Lists.li []
+            [ Lists.content []
+                [ Textfield.render Mdl
+                    [ 0, 1, 4 ]
+                    model.mdl
+                    [ Textfield.label "string"
+                    , Textfield.floatingLabel
+                    , Textfield.value model.config.string
+                    , Options.onInput ChangeStringMsg
+                    ]
+                    []
+                ]
+            ]
+        , Lists.li []
+            [ Lists.content []
+                [ Textfield.render Mdl
+                    [ 0, 1, 5 ]
+                    model.mdl
+                    [ Textfield.label "int"
+                    , Textfield.floatingLabel
+                    , Textfield.value <| toString model.config.int
+                    , Options.onInput ChangeIntMsg
+                    ]
+                    []
+                ]
+            ]
+        ]
+
+
+createButton model mdlMsg mdlId txt tagger =
     Button.render Mdl
         [ 0, 13 ]
         model.mdl
         [ Button.raised
-
-        --, Options.onClick MyClickMsg
+        , Options.onClick tagger
         ]
         [ text txt ]
 

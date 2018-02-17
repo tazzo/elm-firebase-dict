@@ -16843,34 +16843,80 @@ var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
-var _user$project$Main$renderContents = function (model) {
-	return A2(
-		_debois$elm_mdl$Material_Card$view,
+var _user$project$Config$decodeConfig = F2(
+	function (d, v) {
+		return A2(_elm_lang$core$Json_Decode$decodeValue, d, v);
+	});
+var _user$project$Config$decode = F2(
+	function (d, v) {
+		var _p0 = A2(_user$project$Config$decodeConfig, d, v);
+		if (_p0.ctor === 'Ok') {
+			return _elm_lang$core$Maybe$Just(_p0._0);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _user$project$Config$encodeConfig = function (c) {
+	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'bool',
+				_1: _elm_lang$core$Json_Encode$bool(c.bool)
+			},
 			_1: {
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Elevation$e8,
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Card$text,
-				{ctor: '[]'},
-				{
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'string',
+					_1: _elm_lang$core$Json_Encode$string(c.string)
+				},
+				_1: {
 					ctor: '::',
-					_0: A2(
-						_tazzo$elm_markdown_math$MarkdownMath$toHtml,
-						{ctor: '[]'},
-						'<h1>ciao</h1>'),
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'int',
+						_1: _elm_lang$core$Json_Encode$int(c.$int)
+					},
 					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
+				}
+			}
 		});
 };
+var _user$project$Config$empty = {bool: false, string: 'empty', $int: 0};
+var _user$project$Config$Config = F3(
+	function (a, b, c) {
+		return {bool: a, string: b, $int: c};
+	});
+var _user$project$Config$configDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$Config$Config,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'bool',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$bool),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'string',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'int',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$int));
+
 var _user$project$Main$header = function (model) {
 	return {
 		ctor: '::',
@@ -16900,12 +16946,22 @@ var _user$project$Main$initModel = function () {
 	var app = _pairshaped$elm_firebase$Firebase$init(
 		{apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'});
 	var db = _pairshaped$elm_firebase$Firebase_Database$init(app);
-	return {mdl: _debois$elm_mdl$Material$model, app: app, db: db, onText: 'init'};
+	return {mdl: _debois$elm_mdl$Material$model, app: app, db: db, onText: 'init', config: _user$project$Config$empty};
 }();
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {mdl: a, app: b, db: c, onText: d};
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {mdl: a, app: b, db: c, onText: d, config: e};
 	});
+var _user$project$Main$ChangeIntMsg = function (a) {
+	return {ctor: 'ChangeIntMsg', _0: a};
+};
+var _user$project$Main$ChangeStringMsg = function (a) {
+	return {ctor: 'ChangeStringMsg', _0: a};
+};
+var _user$project$Main$MyToggleMsg = {ctor: 'MyToggleMsg'};
+var _user$project$Main$Get = {ctor: 'Get'};
+var _user$project$Main$Set = {ctor: 'Set'};
+var _user$project$Main$Push = {ctor: 'Push'};
 var _user$project$Main$FooValue = function (a) {
 	return {ctor: 'FooValue', _0: a};
 };
@@ -16915,31 +16971,88 @@ var _user$project$Main$Mdl = function (a) {
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'Mdl') {
-			return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
-		} else {
-			var value = A2(
-				_elm_lang$core$Debug$log,
-				'FooValue.value.result',
-				A2(
-					_elm_lang$core$Json_Decode$decodeValue,
-					_elm_lang$core$Json_Decode$string,
-					_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
-			var str = function () {
-				var _p1 = value;
-				if (_p1.ctor === 'Ok') {
-					return _p1._0;
-				} else {
-					return _p1._0;
-				}
-			}();
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{onText: str}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
+		switch (_p0.ctor) {
+			case 'Mdl':
+				return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
+			case 'FooValue':
+				var value = A2(
+					_elm_lang$core$Debug$log,
+					'FooValue.value.result',
+					A2(
+						_elm_lang$core$Json_Decode$decodeValue,
+						_elm_lang$core$Json_Decode$string,
+						_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
+				var str = function () {
+					var _p1 = value;
+					if (_p1.ctor === 'Ok') {
+						return _p1._0;
+					} else {
+						return _p1._0;
+					}
+				}();
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{onText: str}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Push':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'Set':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'Get':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'MyToggleMsg':
+				var toggle = function (c) {
+					return _elm_lang$core$Native_Utils.update(
+						c,
+						{bool: !c.bool});
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							config: toggle(model.config)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeStringMsg':
+				var change = function (c) {
+					return _elm_lang$core$Native_Utils.update(
+						c,
+						{string: _p0._0});
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							config: change(model.config)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var change = function (c) {
+					var _p2 = _elm_lang$core$String$toInt(_p0._0);
+					if (_p2.ctor === 'Ok') {
+						return _elm_lang$core$Native_Utils.update(
+							c,
+							{$int: _p2._0});
+					} else {
+						return c;
+					}
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							config: change(model.config)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$button1 = function (model) {
@@ -17025,8 +17138,203 @@ var _user$project$Main$drawer = function (model) {
 		}
 	};
 };
-var _user$project$Main$createButton = F4(
-	function (model, tagger, mdlId, txt) {
+var _user$project$Main$renderConfig = function (model) {
+	return A2(
+		_debois$elm_mdl$Material_List$ul,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_List$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_List$content,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A5(
+								_debois$elm_mdl$Material_Toggles$switch,
+								_user$project$Main$Mdl,
+								{
+									ctor: '::',
+									_0: 0,
+									_1: {
+										ctor: '::',
+										_0: 1,
+										_1: {
+											ctor: '::',
+											_0: 3,
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								model.mdl,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$onToggle(_user$project$Main$MyToggleMsg),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Toggles$ripple,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Toggles$value(model.config.bool),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('bool'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_List$li,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_List$content,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A5(
+									_debois$elm_mdl$Material_Textfield$render,
+									_user$project$Main$Mdl,
+									{
+										ctor: '::',
+										_0: 0,
+										_1: {
+											ctor: '::',
+											_0: 1,
+											_1: {
+												ctor: '::',
+												_0: 4,
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									model.mdl,
+									{
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Textfield$label('string'),
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Textfield$floatingLabel,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Textfield$value(model.config.string),
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Options$onInput(_user$project$Main$ChangeStringMsg),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_List$li,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_List$content,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A5(
+										_debois$elm_mdl$Material_Textfield$render,
+										_user$project$Main$Mdl,
+										{
+											ctor: '::',
+											_0: 0,
+											_1: {
+												ctor: '::',
+												_0: 1,
+												_1: {
+													ctor: '::',
+													_0: 5,
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										model.mdl,
+										{
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Textfield$label('int'),
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Textfield$floatingLabel,
+												_1: {
+													ctor: '::',
+													_0: _debois$elm_mdl$Material_Textfield$value(
+														_elm_lang$core$Basics$toString(model.config.$int)),
+													_1: {
+														ctor: '::',
+														_0: _debois$elm_mdl$Material_Options$onInput(_user$project$Main$ChangeIntMsg),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$renderContents = function (model) {
+	return A2(
+		_debois$elm_mdl$Material_Card$view,
+		{
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Elevation$e8,
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Card$text,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_tazzo$elm_markdown_math$MarkdownMath$toHtml,
+						{ctor: '[]'},
+						_elm_lang$core$Basics$toString(model.config)),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$renderConfig(model),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$createButton = F5(
+	function (model, mdlMsg, mdlId, txt, tagger) {
 		return A5(
 			_debois$elm_mdl$Material_Button$render,
 			_user$project$Main$Mdl,
@@ -17043,7 +17351,11 @@ var _user$project$Main$createButton = F4(
 			{
 				ctor: '::',
 				_0: _debois$elm_mdl$Material_Button$raised,
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$onClick(tagger),
+					_1: {ctor: '[]'}
+				}
 			},
 			{
 				ctor: '::',
@@ -17075,7 +17387,7 @@ var _user$project$Main$viewBody = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: A4(
+					_0: A5(
 						_user$project$Main$createButton,
 						model,
 						_user$project$Main$Mdl,
@@ -17088,7 +17400,8 @@ var _user$project$Main$viewBody = function (model) {
 								_1: {ctor: '[]'}
 							}
 						},
-						'Push'),
+						'Push',
+						_user$project$Main$Push),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -17106,7 +17419,7 @@ var _user$project$Main$viewBody = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: A4(
+						_0: A5(
 							_user$project$Main$createButton,
 							model,
 							_user$project$Main$Mdl,
@@ -17119,7 +17432,8 @@ var _user$project$Main$viewBody = function (model) {
 									_1: {ctor: '[]'}
 								}
 							},
-							'Once'),
+							'Once',
+							_user$project$Main$Get),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -17137,7 +17451,7 @@ var _user$project$Main$viewBody = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: A4(
+							_0: A5(
 								_user$project$Main$createButton,
 								model,
 								_user$project$Main$Mdl,
@@ -17150,7 +17464,8 @@ var _user$project$Main$viewBody = function (model) {
 										_1: {ctor: '[]'}
 									}
 								},
-								'Set'),
+								'Set',
+								_user$project$Main$Set),
 							_1: {ctor: '[]'}
 						}),
 					_1: {

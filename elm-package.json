@@ -10,12 +10,12 @@
     "dependencies": {
         "elm-lang/core": "5.1.1 <= v < 6.0.0",
         "elm-lang/html": "2.0.0 <= v < 3.0.0",
-        "pairshaped/elm-firebase": "0.0.14 <= v < 1.0.0"
+        "pairshaped/elm-firebase": "0.0.15 <= v < 1.0.0"
     },
 
       "pairshaped/elm-firebase": {
         "url": "https://github.com/tazzo/elm-firebase",
-        "ref": "0.0.14"
+        "ref": "0.0.15"
       }
     },
     "elm-version": "0.18.0 <= v < 0.19.0"
