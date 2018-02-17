@@ -1,4 +1,4 @@
-module Config exposing (Config, empty, encodeConfig, decode)
+module Config exposing (Config, empty, encodeConfig, decode, configDecoder)
 
 import Json.Encode as JE
 import Json.Decode as JD

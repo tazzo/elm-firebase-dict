@@ -16952,6 +16952,9 @@ var _user$project$Main$Model = F5(
 	function (a, b, c, d, e) {
 		return {mdl: a, app: b, db: c, onText: d, config: e};
 	});
+var _user$project$Main$WriteStatus = function (a) {
+	return {ctor: 'WriteStatus', _0: a};
+};
 var _user$project$Main$ChangeIntMsg = function (a) {
 	return {ctor: 'ChangeIntMsg', _0: a};
 };
@@ -16999,8 +17002,6 @@ var _user$project$Main$update = F2(
 				};
 			case 'Push':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'Set':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'Get':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'MyToggleMsg':
@@ -17033,7 +17034,7 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ChangeIntMsg':
 				var change = function (c) {
 					var _p2 = _elm_lang$core$String$toInt(_p0._0);
 					if (_p2.ctor === 'Ok') {
@@ -17053,6 +17054,25 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'Set':
+				var fooRef = A2(
+					_pairshaped$elm_firebase$Firebase_Database$ref,
+					_elm_lang$core$Maybe$Just('foo'),
+					model.db);
+				var value = _user$project$Config$encodeConfig(model.config);
+				var command = A2(
+					_elm_lang$core$Task$attempt,
+					_user$project$Main$WriteStatus,
+					A2(_pairshaped$elm_firebase$Firebase_Database_Reference$set, value, fooRef));
+				return {ctor: '_Tuple2', _0: model, _1: command};
+			default:
+				if (_p0._0.ctor === 'Ok') {
+					var _p3 = _elm_lang$core$Debug$log('Firebase write success');
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var _p4 = _elm_lang$core$Debug$log('Firebase write fail');
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 		}
 	});
 var _user$project$Main$button1 = function (model) {

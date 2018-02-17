@@ -15,7 +15,9 @@ import Material.Button as Button
 import Material.List as Lists
 import Material.Grid exposing (stretch, grid, cell, size, order, offset, Device(..))
 import MarkdownMath exposing (toHtml)
-import Json.Decode
+import Json.Decode as JD
+import Json.Encode as JE
+import Task
 
 
 --firebase
@@ -25,6 +27,7 @@ import Firebase.Database
 import Firebase.Database.Types
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
+import Firebase.Errors exposing (Error)
 
 
 -- Config
@@ -50,6 +53,7 @@ type Msg
     | MyToggleMsg
     | ChangeStringMsg String
     | ChangeIntMsg String
+    | WriteStatus (Result Error ())
 
 
 type alias Mdl =
@@ -105,7 +109,7 @@ update msg model =
                     snapshot
                         |> Firebase.Database.Snapshot.value
                         -- Gives us a Json.Decode.Value
-                        |> Json.Decode.decodeValue Json.Decode.string
+                        |> JD.decodeValue JD.string
                         -- Convert into a Result String a (where a is a String)
                         |> Debug.log "FooValue.value.result"
 
@@ -124,9 +128,6 @@ update msg model =
                 )
 
         Push ->
-            ( model, Cmd.none )
-
-        Set ->
             ( model, Cmd.none )
 
         Get ->
@@ -157,6 +158,45 @@ update msg model =
                             c
             in
                 ( { model | config = (change model.config) }, Cmd.none )
+
+        Set ->
+            let
+                value : JE.Value
+                value =
+                    Config.encodeConfig model.config
+
+                fooRef : Firebase.Database.Types.Reference
+                fooRef =
+                    model.db
+                        |> Firebase.Database.ref (Just "foo")
+
+                command : Cmd Msg
+                command =
+                    fooRef
+                        |> Firebase.Database.Reference.set value
+                        |> Task.attempt WriteStatus
+            in
+                ( model
+                , command
+                )
+
+        WriteStatus (Ok _) ->
+            let
+                _ =
+                    Debug.log "Firebase write success"
+            in
+                ( model
+                , Cmd.none
+                )
+
+        WriteStatus (Err _) ->
+            let
+                _ =
+                    Debug.log "Firebase write fail"
+            in
+                ( model
+                , Cmd.none
+                )
 
 
 view : Model -> Html Msg
