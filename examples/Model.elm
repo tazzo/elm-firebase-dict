@@ -6,13 +6,14 @@ import Firebase.Database
 import Firebase.Database.Types
 import Data
 import FirebaseDict
+import FirebaseDict.FDict as FDict
 
 
 type alias Model =
     { mdl : Material.Model
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
-    , fooDict : FirebaseDict.FDict Data.Data
+    , fooDict : FDict.FDict Data.Data
     }
 
 
@@ -24,6 +25,7 @@ type Msg
     | FirebaseDictMsg FirebaseDict.Msg
 
 
+firebaseInit : Firebase.Config
 firebaseInit =
     { apiKey = "AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U"
     , authDomain = "elm-firebase-try01.firebaseapp.com"
@@ -43,5 +45,5 @@ initModel =
         { mdl = Material.model
         , app = app
         , db = Firebase.Database.init app
-        , fooDict = FirebaseDict.empty
+        , fooDict = FDict.empty
         }

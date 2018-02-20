@@ -5,6 +5,11 @@ import Json.Decode as JD
 import Material.Typography as Typo
 import Material.Options as Options
 import Html exposing (..)
+import Html exposing (..)
+import Material.Card as Card
+import Material.Options as Options
+import Material.Options as Options exposing (css)
+import Material.Elevation as Elevation
 
 
 type alias Data =
@@ -24,9 +29,17 @@ empty =
 
 render : Data -> Html msg
 render data =
-    Options.styled p
-        [ Typo.headline ]
-        [ text (toString data) ]
+    Card.view
+        [ css "width" "100%"
+        , Elevation.e2
+        , css "margin" "4px 8px 10px 0px"
+        ]
+        [ Card.text []
+            [ Options.styled p
+                [ Typo.body1 ]
+                [ text (toString data) ]
+            ]
+        ]
 
 
 encoder : Data -> JE.Value

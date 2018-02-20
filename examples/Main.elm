@@ -47,6 +47,7 @@ update msg model =
         Get ->
             ( model, Cmd.none )
 
+        -- Boilerplate: FirebaseDict action handler.
         FirebaseDictMsg msg ->
             FirebaseDict.update FirebaseDictMsg msg model dataConfig
 

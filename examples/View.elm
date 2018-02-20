@@ -10,7 +10,7 @@ import Material.Elevation as Elevation
 import Material.Button as Button
 import Material.Grid exposing (stretch, grid, cell, size, order, offset, Device(..))
 import Model exposing (..)
-import Dict
+import FirebaseDict.FDict as FDict
 import Data
 
 
@@ -100,23 +100,12 @@ viewBody model =
                 [ size All 12
                 , stretch
                 ]
-                [ renderContents model ]
+                (renderContents model)
             ]
 
 
-renderContents : Model -> Html Msg
+renderContents : Model -> List (Html Msg)
 renderContents model =
-    Card.view
-        [ css "width" "100%"
-        , Elevation.e8
-        ]
-        [ Card.text []
-            (renderFDict model)
-        ]
-
-
-renderFDict : Model -> List (Html Msg)
-renderFDict model =
     model.fooDict
-        |> Dict.values
+        |> FDict.values
         |> List.map Data.render
