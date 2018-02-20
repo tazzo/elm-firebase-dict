@@ -2,18 +2,31 @@ module View exposing (..)
 
 import Html exposing (..)
 import Material.Layout as Layout
-import Material.Toggles as Toggles
 import Material.Color as Color
 import Material.Card as Card
-import Material.Textfield as Textfield
 import Material.Options as Options
 import Material.Options as Options exposing (css)
 import Material.Elevation as Elevation
 import Material.Button as Button
-import Material.List as Lists
 import Material.Grid exposing (stretch, grid, cell, size, order, offset, Device(..))
-import MarkdownMath exposing (toHtml)
 import Model exposing (..)
+import Dict
+import Data
+
+
+render : Model -> Html Msg
+render model =
+    Layout.render
+        Mdl
+        model.mdl
+        [ Layout.fixedHeader
+        , Layout.fixedDrawer
+        ]
+        { header = header model
+        , drawer = drawer model
+        , tabs = ( [], [] )
+        , main = [ viewBody model ]
+        }
 
 
 drawer : Model -> List (Html Msg)
@@ -42,7 +55,7 @@ button1 model =
 
         -- , Options.onClick <| InputChange example1
         ]
-        [ text model.onText ]
+        [ text "button1" ]
 
 
 header : Model -> List (Html Msg)
@@ -96,55 +109,14 @@ renderContents model =
     Card.view
         [ css "width" "100%"
         , Elevation.e8
-
-        -- ,Color.background (Color.color Color.Amber Color.S600)
         ]
         [ Card.text []
-            [ toHtml [] (toString model.config)
-            , renderConfig model
-            ]
+            (renderFDict model)
         ]
 
 
-renderConfig : Model -> Html Msg
-renderConfig model =
-    Lists.ul []
-        [ Lists.li []
-            [ Lists.content []
-                [ Toggles.switch Mdl
-                    [ 0, 1, 3 ]
-                    model.mdl
-                    [ Options.onToggle MyToggleMsg
-                    , Toggles.ripple
-                    , Toggles.value model.config.bool
-                    ]
-                    [ text "bool" ]
-                ]
-            ]
-        , Lists.li []
-            [ Lists.content []
-                [ Textfield.render Mdl
-                    [ 0, 1, 4 ]
-                    model.mdl
-                    [ Textfield.label "string"
-                    , Textfield.floatingLabel
-                    , Textfield.value model.config.string
-                    , Options.onInput ChangeStringMsg
-                    ]
-                    []
-                ]
-            ]
-        , Lists.li []
-            [ Lists.content []
-                [ Textfield.render Mdl
-                    [ 0, 1, 5 ]
-                    model.mdl
-                    [ Textfield.label "int"
-                    , Textfield.floatingLabel
-                    , Textfield.value <| toString model.config.int
-                    , Options.onInput ChangeIntMsg
-                    ]
-                    []
-                ]
-            ]
-        ]
+renderFDict : Model -> List (Html Msg)
+renderFDict model =
+    model.fooDict
+        |> Dict.values
+        |> List.map Data.render

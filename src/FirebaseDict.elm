@@ -14,8 +14,6 @@ import Firebase.Database.Reference
 import Firebase.Database.Types
 
 
-{-| A FirebaseDict is ..
--}
 type alias Config m v =
     { path : String
     , encoder : v -> JE.Value
@@ -39,8 +37,6 @@ createFDict config =
     Dict.empty
 
 
-{-| A FirebaseDict is ..
--}
 create : String -> (v -> JE.Value) -> JD.Decoder v -> (m -> Dict.Dict String v) -> (m -> Dict.Dict String v -> m) -> Config m v
 create path encoder decoder get set =
     { path = path
@@ -69,9 +65,6 @@ update tagger msg config model =
             Snapshot snapshot ->
                 -- ( model, Cmd.none )
                 let
-                    {-
-                       This decodes the value of "/foo" as a string.
-                    -}
                     value : Result String v
                     value =
                         snapshot
@@ -79,7 +72,7 @@ update tagger msg config model =
                             -- Gives us a Json.Decode.Value
                             |> JD.decodeValue config.decoder
                             -- Convert into a Result String a (where a is a String)
-                            |> Debug.log "FooValue.value.result"
+                            |> Debug.log "update Snapshot"
 
                     key =
                         Firebase.Database.Snapshot.key snapshot
@@ -104,16 +97,17 @@ update tagger msg config model =
                             )
 
 
-subscribeFDict : (Msg -> msg) -> Firebase.Database.Types.Database -> Sub msg
-subscribeFDict tagger db =
+subscribeFDict : (Msg -> msg) -> Firebase.Database.Types.Database -> Config m v -> Sub msg
+subscribeFDict tagger db config =
     let
-        fooRef : Firebase.Database.Types.Reference
-        fooRef =
-            db
-                |> Firebase.Database.ref (Just "foo")
+        ref : Firebase.Database.Types.Reference
+        ref =
+            Firebase.Database.ref (Just config.path) db
     in
         Sub.batch
             [ Time.every (Time.second * 4) (\time -> tagger (Time time))
-            , Firebase.Database.Reference.on "child_added" fooRef (\snapshot -> tagger (Snapshot snapshot))
-            , Firebase.Database.Reference.on "child_changed" fooRef (\snapshot -> tagger (Snapshot snapshot))
+            , Firebase.Database.Reference.on "child_added" ref (\snapshot -> tagger (Snapshot snapshot))
+            , Firebase.Database.Reference.on "child_changed" ref (\snapshot -> tagger (Snapshot snapshot))
+            , Firebase.Database.Reference.on "child_removed" ref (\snapshot -> tagger (Snapshot snapshot))
+            , Firebase.Database.Reference.on "child_moved" ref (\snapshot -> tagger (Snapshot snapshot))
             ]

@@ -2,15 +2,9 @@ module Data exposing (..)
 
 import Json.Encode as JE
 import Json.Decode as JD
-
-
-createFDictConfig path get set =
-    { path = path
-    , encoder = encodeData
-    , decoder = dataDecoder
-    , get = get
-    , set = set
-    }
+import Material.Typography as Typo
+import Material.Options as Options
+import Html exposing (..)
 
 
 type alias Data =
@@ -28,8 +22,15 @@ empty =
     }
 
 
-encodeData : Data -> JE.Value
-encodeData c =
+render : Data -> Html msg
+render data =
+    Options.styled p
+        [ Typo.headline ]
+        [ text (toString data) ]
+
+
+encoder : Data -> JE.Value
+encoder c =
     JE.object
         [ ( "bool", JE.bool c.bool )
         , ( "string", JE.string c.string )
@@ -37,24 +38,9 @@ encodeData c =
         ]
 
 
-dataDecoder : JD.Decoder Data
-dataDecoder =
+deoder : JD.Decoder Data
+deoder =
     JD.map3 Data
         (JD.at [ "bool" ] JD.bool)
         (JD.at [ "string" ] JD.string)
         (JD.at [ "int" ] JD.int)
-
-
-decode : JD.Decoder Data -> JE.Value -> Maybe Data
-decode d v =
-    case (decodeData d v) of
-        Ok c ->
-            Just c
-
-        Err s ->
-            Nothing
-
-
-decodeData : JD.Decoder Data -> JE.Value -> Result String Data
-decodeData d v =
-    JD.decodeValue d v
