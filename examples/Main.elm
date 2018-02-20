@@ -6,6 +6,7 @@ import Material.Layout as Layout
 import Json.Decode as JD
 import Json.Encode as JE
 import Task
+import Time
 
 
 --firebase
@@ -14,17 +15,22 @@ import Firebase.Database
 import Firebase.Database.Types
 import Firebase.Database.Reference
 import Firebase.Database.Snapshot
+import FirebaseDict
 
 
 -- Config
 
-import Config
+import Data
 
 
 -- Model and View
 
 import Model exposing (..)
 import View exposing (..)
+
+
+dataConfig =
+    Data.createFDictConfig "foo" .fooDict (\m v -> { m | fooDict = v })
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -39,12 +45,12 @@ update msg model =
                 {-
                    This decodes the value of "/foo" as a string.
                 -}
-                value : Result String Config.Config
+                value : Result String Data.Data
                 value =
                     snapshot
                         |> Firebase.Database.Snapshot.value
                         -- Gives us a Json.Decode.Value
-                        |> JD.decodeValue Config.configDecoder
+                        |> JD.decodeValue Data.dataDecoder
                         -- Convert into a Result String a (where a is a String)
                         |> Debug.log "FooValue.value.result"
 
@@ -67,6 +73,9 @@ update msg model =
 
         Get ->
             ( model, Cmd.none )
+
+        HeartBit msg ->
+            FirebaseDict.update HeartBit msg dataConfig model
 
         MyToggleMsg ->
             let
@@ -98,7 +107,7 @@ update msg model =
             let
                 value : JE.Value
                 value =
-                    Config.encodeConfig model.config
+                    Data.encodeData model.config
 
                 fooRef : Firebase.Database.Types.Reference
                 fooRef =
@@ -161,8 +170,10 @@ subscriptions model =
 
             --  , Firebase.Database.Reference.on "value" fooRef FooValue
             , Firebase.Database.Reference.on "child_added" fooRef FooValue
-            , Firebase.Database.Reference.on "child_changed" fooRef FooValue
-            , Firebase.Database.Reference.on "child_removed" fooRef FooValue
+
+            -- , Firebase.Database.Reference.on "child_changed" fooRef FooValue
+            -- , Firebase.Database.Reference.on "child_removed" fooRef FooValue
+            , FirebaseDict.subscribeFDict HeartBit model.db
             ]
 
 

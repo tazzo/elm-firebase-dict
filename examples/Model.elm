@@ -5,7 +5,8 @@ import Firebase
 import Firebase.Database
 import Firebase.Database.Types
 import Firebase.Errors exposing (Error)
-import Config
+import Data
+import FirebaseDict
 
 
 type alias Model =
@@ -13,7 +14,8 @@ type alias Model =
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
     , onText : String
-    , config : Config.Config
+    , config : Data.Data
+    , fooDict : FirebaseDict.FDict Data.Data
     }
 
 
@@ -27,6 +29,7 @@ type Msg
     | ChangeStringMsg String
     | ChangeIntMsg String
     | WriteStatus (Result Error ())
+    | HeartBit FirebaseDict.Msg
 
 
 initModel : Model
@@ -57,5 +60,6 @@ initModel =
         , app = app
         , db = db
         , onText = "init"
-        , config = Config.empty
+        , config = Data.empty
+        , fooDict = FirebaseDict.empty
         }

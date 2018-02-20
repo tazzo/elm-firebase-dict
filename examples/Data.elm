@@ -1,17 +1,26 @@
-module Config exposing (Config, empty, encodeConfig, decode, configDecoder)
+module Data exposing (..)
 
 import Json.Encode as JE
 import Json.Decode as JD
 
 
-type alias Config =
+createFDictConfig path get set =
+    { path = path
+    , encoder = encodeData
+    , decoder = dataDecoder
+    , get = get
+    , set = set
+    }
+
+
+type alias Data =
     { bool : Bool
     , string : String
     , int : Int
     }
 
 
-empty : Config
+empty : Data
 empty =
     { bool = False
     , string = "empty"
@@ -19,8 +28,8 @@ empty =
     }
 
 
-encodeConfig : Config -> JE.Value
-encodeConfig c =
+encodeData : Data -> JE.Value
+encodeData c =
     JE.object
         [ ( "bool", JE.bool c.bool )
         , ( "string", JE.string c.string )
@@ -28,17 +37,17 @@ encodeConfig c =
         ]
 
 
-configDecoder : JD.Decoder Config
-configDecoder =
-    JD.map3 Config
+dataDecoder : JD.Decoder Data
+dataDecoder =
+    JD.map3 Data
         (JD.at [ "bool" ] JD.bool)
         (JD.at [ "string" ] JD.string)
         (JD.at [ "int" ] JD.int)
 
 
-decode : JD.Decoder Config -> JE.Value -> Maybe Config
+decode : JD.Decoder Data -> JE.Value -> Maybe Data
 decode d v =
-    case (decodeConfig d v) of
+    case (decodeData d v) of
         Ok c ->
             Just c
 
@@ -46,6 +55,6 @@ decode d v =
             Nothing
 
 
-decodeConfig : JD.Decoder Config -> JE.Value -> Result String Config
-decodeConfig d v =
+decodeData : JD.Decoder Data -> JE.Value -> Result String Data
+decodeData d v =
     JD.decodeValue d v

@@ -20802,20 +20802,20 @@ var _tazzo$elm_markdown_math$MarkdownMath$Options = F4(
 		return {githubFlavored: a, defaultHighlighting: b, sanitize: c, smartypants: d};
 	});
 
-var _user$project$Config$decodeConfig = F2(
+var _user$project$Data$decodeData = F2(
 	function (d, v) {
 		return A2(_elm_lang$core$Json_Decode$decodeValue, d, v);
 	});
-var _user$project$Config$decode = F2(
+var _user$project$Data$decode = F2(
 	function (d, v) {
-		var _p0 = A2(_user$project$Config$decodeConfig, d, v);
+		var _p0 = A2(_user$project$Data$decodeData, d, v);
 		if (_p0.ctor === 'Ok') {
 			return _elm_lang$core$Maybe$Just(_p0._0);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
-var _user$project$Config$encodeConfig = function (c) {
+var _user$project$Data$encodeData = function (c) {
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -20843,14 +20843,14 @@ var _user$project$Config$encodeConfig = function (c) {
 			}
 		});
 };
-var _user$project$Config$empty = {bool: false, string: 'empty', $int: 0};
-var _user$project$Config$Config = F3(
+var _user$project$Data$empty = {bool: false, string: 'empty', $int: 0};
+var _user$project$Data$Data = F3(
 	function (a, b, c) {
 		return {bool: a, string: b, $int: c};
 	});
-var _user$project$Config$configDecoder = A4(
+var _user$project$Data$dataDecoder = A4(
 	_elm_lang$core$Json_Decode$map3,
-	_user$project$Config$Config,
+	_user$project$Data$Data,
 	A2(
 		_elm_lang$core$Json_Decode$at,
 		{
@@ -20875,17 +20875,128 @@ var _user$project$Config$configDecoder = A4(
 			_1: {ctor: '[]'}
 		},
 		_elm_lang$core$Json_Decode$int));
+var _user$project$Data$createFDictConfig = F3(
+	function (path, get, set) {
+		return {path: path, encoder: _user$project$Data$encodeData, decoder: _user$project$Data$dataDecoder, get: get, set: set};
+	});
+
+var _user$project$FirebaseDict$update = F4(
+	function (tagger, msg, config, model) {
+		var _p0 = A2(_elm_lang$core$Debug$log, 'update : ', msg);
+		var _p1 = msg;
+		if (_p1.ctor === 'Time') {
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		} else {
+			var _p4 = _p1._0;
+			var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p4);
+			var insert = F2(
+				function (m, v) {
+					var _p2 = key;
+					if (_p2.ctor === 'Nothing') {
+						return m;
+					} else {
+						return A2(
+							config.set,
+							m,
+							A3(
+								_elm_lang$core$Dict$insert,
+								_p2._0,
+								v,
+								config.get(m)));
+					}
+				});
+			var value = A2(
+				_elm_lang$core$Debug$log,
+				'FooValue.value.result',
+				A2(
+					_elm_lang$core$Json_Decode$decodeValue,
+					config.decoder,
+					_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p4)));
+			var _p3 = value;
+			if (_p3.ctor === 'Err') {
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: A2(insert, model, _p3._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			}
+		}
+	});
+var _user$project$FirebaseDict$create = F5(
+	function (path, encoder, decoder, get, set) {
+		return {path: path, encoder: encoder, decoder: decoder, get: get, set: set};
+	});
+var _user$project$FirebaseDict$createFDict = function (config) {
+	return _elm_lang$core$Dict$empty;
+};
+var _user$project$FirebaseDict$empty = _elm_lang$core$Dict$empty;
+var _user$project$FirebaseDict$Config = F5(
+	function (a, b, c, d, e) {
+		return {path: a, encoder: b, decoder: c, get: d, set: e};
+	});
+var _user$project$FirebaseDict$Snapshot = function (a) {
+	return {ctor: 'Snapshot', _0: a};
+};
+var _user$project$FirebaseDict$Time = function (a) {
+	return {ctor: 'Time', _0: a};
+};
+var _user$project$FirebaseDict$subscribeFDict = F2(
+	function (tagger, db) {
+		var fooRef = A2(
+			_pairshaped$elm_firebase$Firebase_Database$ref,
+			_elm_lang$core$Maybe$Just('foo'),
+			db);
+		return _elm_lang$core$Platform_Sub$batch(
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$core$Time$every,
+					_elm_lang$core$Time$second * 4,
+					function (time) {
+						return tagger(
+							_user$project$FirebaseDict$Time(time));
+					}),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_pairshaped$elm_firebase$Firebase_Database_Reference$on,
+						'child_added',
+						fooRef,
+						function (snapshot) {
+							return tagger(
+								_user$project$FirebaseDict$Snapshot(snapshot));
+						}),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_pairshaped$elm_firebase$Firebase_Database_Reference$on,
+							'child_changed',
+							fooRef,
+							function (snapshot) {
+								return tagger(
+									_user$project$FirebaseDict$Snapshot(snapshot));
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 
 var _user$project$Model$initModel = function () {
 	var app = _pairshaped$elm_firebase$Firebase$init(
 		{apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'});
 	var db = _pairshaped$elm_firebase$Firebase_Database$init(app);
-	return {mdl: _debois$elm_mdl$Material$model, app: app, db: db, onText: 'init', config: _user$project$Config$empty};
+	return {mdl: _debois$elm_mdl$Material$model, app: app, db: db, onText: 'init', config: _user$project$Data$empty, fooDict: _user$project$FirebaseDict$empty};
 }();
-var _user$project$Model$Model = F5(
-	function (a, b, c, d, e) {
-		return {mdl: a, app: b, db: c, onText: d, config: e};
+var _user$project$Model$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {mdl: a, app: b, db: c, onText: d, config: e, fooDict: f};
 	});
+var _user$project$Model$HeartBit = function (a) {
+	return {ctor: 'HeartBit', _0: a};
+};
 var _user$project$Model$WriteStatus = function (a) {
 	return {ctor: 'WriteStatus', _0: a};
 };
@@ -21383,12 +21494,8 @@ var _user$project$Main$subscriptions = function (model) {
 				_0: A3(_pairshaped$elm_firebase$Firebase_Database_Reference$on, 'child_added', fooRef, _user$project$Model$FooValue),
 				_1: {
 					ctor: '::',
-					_0: A3(_pairshaped$elm_firebase$Firebase_Database_Reference$on, 'child_changed', fooRef, _user$project$Model$FooValue),
-					_1: {
-						ctor: '::',
-						_0: A3(_pairshaped$elm_firebase$Firebase_Database_Reference$on, 'child_removed', fooRef, _user$project$Model$FooValue),
-						_1: {ctor: '[]'}
-					}
+					_0: A2(_user$project$FirebaseDict$subscribeFDict, _user$project$Model$HeartBit, model.db),
+					_1: {ctor: '[]'}
 				}
 			}
 		});
@@ -21422,6 +21529,18 @@ var _user$project$Main$view = function (model) {
 			}
 		});
 };
+var _user$project$Main$dataConfig = A3(
+	_user$project$Data$createFDictConfig,
+	'foo',
+	function (_) {
+		return _.fooDict;
+	},
+	F2(
+		function (m, v) {
+			return _elm_lang$core$Native_Utils.update(
+				m,
+				{fooDict: v});
+		}));
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -21434,7 +21553,7 @@ var _user$project$Main$update = F2(
 					'FooValue.value.result',
 					A2(
 						_elm_lang$core$Json_Decode$decodeValue,
-						_user$project$Config$configDecoder,
+						_user$project$Data$dataDecoder,
 						_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p0._0)));
 				var c = function () {
 					var _p1 = value;
@@ -21455,6 +21574,8 @@ var _user$project$Main$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'Get':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'HeartBit':
+				return A4(_user$project$FirebaseDict$update, _user$project$Model$HeartBit, _p0._0, _user$project$Main$dataConfig, model);
 			case 'MyToggleMsg':
 				var toggle = function (c) {
 					return _elm_lang$core$Native_Utils.update(
@@ -21510,7 +21631,7 @@ var _user$project$Main$update = F2(
 					_pairshaped$elm_firebase$Firebase_Database$ref,
 					_elm_lang$core$Maybe$Just('foo'),
 					model.db);
-				var value = _user$project$Config$encodeConfig(model.config);
+				var value = _user$project$Data$encodeData(model.config);
 				var command = A2(
 					_elm_lang$core$Task$attempt,
 					_user$project$Model$WriteStatus,
@@ -21541,7 +21662,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Model.Msg":{"args":[],"tags":{"MyToggleMsg":[],"ChangeStringMsg":["String"],"Set":[],"Get":[],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"ChangeIntMsg":["String"],"FooValue":["Firebase.Database.Types.Snapshot"],"Mdl":["Material.Msg Model.Msg"],"Push":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Model.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Model.Msg":{"args":[],"tags":{"MyToggleMsg":[],"ChangeStringMsg":["String"],"Set":[],"Get":[],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"ChangeIntMsg":["String"],"FooValue":["Firebase.Database.Types.Snapshot"],"HeartBit":["FirebaseDict.Msg"],"Mdl":["Material.Msg Model.Msg"],"Push":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"FirebaseDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Time":["Time.Time"]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"Time.Time":{"args":[],"type":"Float"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Model.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
