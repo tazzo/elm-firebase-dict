@@ -52,8 +52,8 @@ type Msg
     | Snapshot Firebase.Database.Types.Snapshot
 
 
-update : (Msg -> msg) -> Msg -> Config m v -> m -> ( m, Cmd msg )
-update tagger msg config model =
+update : (Msg -> msg) -> Msg -> m -> Config m v -> ( m, Cmd msg )
+update tagger msg model config =
     let
         _ =
             Debug.log "update : " msg
@@ -97,8 +97,8 @@ update tagger msg config model =
                             )
 
 
-subscribeFDict : (Msg -> msg) -> Firebase.Database.Types.Database -> Config m v -> Sub msg
-subscribeFDict tagger db config =
+subscribe : (Msg -> msg) -> Firebase.Database.Types.Database -> Config m v -> Sub msg
+subscribe tagger db config =
     let
         ref : Firebase.Database.Types.Reference
         ref =

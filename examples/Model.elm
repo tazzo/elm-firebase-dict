@@ -37,17 +37,11 @@ firebaseInit =
 initModel : Model
 initModel =
     let
-        app : Firebase.App
         app =
             Firebase.init firebaseInit
-
-        db : Firebase.Database.Types.Database
-        db =
-            Firebase.Database.init app
     in
-        { mdl =
-            Material.model
+        { mdl = Material.model
         , app = app
-        , db = db
+        , db = Firebase.Database.init app
         , fooDict = FirebaseDict.empty
         }

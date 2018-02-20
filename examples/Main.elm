@@ -48,7 +48,7 @@ update msg model =
             ( model, Cmd.none )
 
         FirebaseDictMsg msg ->
-            FirebaseDict.update FirebaseDictMsg msg dataConfig model
+            FirebaseDict.update FirebaseDictMsg msg model dataConfig
 
 
 view : Model -> Html Msg
@@ -60,7 +60,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Layout.subs Mdl model.mdl
-        , FirebaseDict.subscribeFDict FirebaseDictMsg model.db dataConfig
+        , FirebaseDict.subscribe FirebaseDictMsg model.db dataConfig
         ]
 
 
