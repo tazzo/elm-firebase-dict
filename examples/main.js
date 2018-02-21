@@ -20543,49 +20543,6 @@ var _user$project$Data$encoder = function (c) {
 			}
 		});
 };
-var _user$project$Data$render = F2(
-	function (data, model) {
-		return A2(
-			_debois$elm_mdl$Material_Card$view,
-			{
-				ctor: '::',
-				_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-				_1: {
-					ctor: '::',
-					_0: _debois$elm_mdl$Material_Elevation$e2,
-					_1: {
-						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
-						_1: {ctor: '[]'}
-					}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Card$text,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A3(
-							_debois$elm_mdl$Material_Options$styled,
-							_elm_lang$html$Html$p,
-							{
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Typography$body1,
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(data)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
-	});
 var _user$project$Data$empty = {bool: false, string: 'empty', $int: 0};
 var _user$project$Data$Data = F3(
 	function (a, b, c) {
@@ -20923,10 +20880,141 @@ var _user$project$Model$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
 
+var _user$project$View$renderData = F3(
+	function (model, i, data) {
+		return A2(
+			_debois$elm_mdl$Material_Card$view,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$background(
+					A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200)),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Elevation$e2,
+						_1: {
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Card$text,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A3(
+							_debois$elm_mdl$Material_Options$styled,
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Typography$body1,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(data)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Card$actions,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Card$border,
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'vertical-align', 'center'),
+								_1: {
+									ctor: '::',
+									_0: A2(_debois$elm_mdl$Material_Options$css, 'text-align', 'right'),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Color$text(_debois$elm_mdl$Material_Color$accent),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A5(
+								_debois$elm_mdl$Material_Button$render,
+								_user$project$Model$Mdl,
+								{
+									ctor: '::',
+									_0: 8,
+									_1: {
+										ctor: '::',
+										_0: i,
+										_1: {ctor: '[]'}
+									}
+								},
+								model.mdl,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Button$icon,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Button$ripple,
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Icon$i('create'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A5(
+									_debois$elm_mdl$Material_Button$render,
+									_user$project$Model$Mdl,
+									{
+										ctor: '::',
+										_0: 8,
+										_1: {
+											ctor: '::',
+											_0: i + 10,
+											_1: {ctor: '[]'}
+										}
+									},
+									model.mdl,
+									{
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Button$icon,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Button$ripple,
+											_1: {ctor: '[]'}
+										}
+									},
+									{
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Icon$i('check'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 var _user$project$View$renderContents = function (model) {
 	return A2(
-		_elm_lang$core$List$map,
-		_user$project$Data$render(model),
+		_elm_lang$core$List$indexedMap,
+		_user$project$View$renderData(model),
 		_user$project$FirebaseDict_FDict$values(model.fooDict));
 };
 var _user$project$View$viewBody = function (model) {

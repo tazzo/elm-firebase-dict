@@ -8,10 +8,12 @@ import Material.Options as Options
 import Material.Options as Options exposing (css)
 import Material.Elevation as Elevation
 import Material.Button as Button
+import Material.Icon as Icon
 import Material.Grid exposing (stretch, grid, cell, size, order, offset, Device(..))
 import Model exposing (..)
 import FirebaseDict.FDict as FDict
 import Data
+import Material.Typography as Typo
 
 
 render : Model -> Html Msg
@@ -108,4 +110,37 @@ renderContents : Model -> List (Html Msg)
 renderContents model =
     model.fooDict
         |> FDict.values
-        |> List.map (Data.render model)
+        |> List.indexedMap (renderData model)
+
+
+renderData : Model -> Int -> Data.Data -> Html Msg
+renderData model i data =
+    Card.view
+        [ Color.background (Color.color Color.Grey Color.S200)
+        , css "width" "100%"
+        , Elevation.e2
+        , css "margin" "4px 8px 10px 0px"
+        ]
+        [ Card.text []
+            [ Options.styled p
+                [ Typo.body1 ]
+                [ text (toString data) ]
+            ]
+        , Card.actions
+            [ Card.border
+            , css "vertical-align" "center"
+            , css "text-align" "right"
+            , Color.text Color.accent
+            ]
+            [ Button.render Mdl
+                [ 8, i ]
+                model.mdl
+                [ Button.icon, Button.ripple ]
+                [ Icon.i "create" ]
+            , Button.render Mdl
+                [ 8, i + 10 ]
+                model.mdl
+                [ Button.icon, Button.ripple ]
+                [ Icon.i "check" ]
+            ]
+        ]
