@@ -30,6 +30,7 @@ type Msg
     = Heartbeat Firebase.Database.Types.Reference
     | Snapshot Firebase.Database.Types.Snapshot
     | WriteStatus (Result Error ())
+    | Remove Firebase.Database.Types.Snapshot
 
 
 
@@ -128,6 +129,28 @@ update tagger msg model config =
                             , Cmd.none
                             )
 
+            Remove snapshot ->
+                let
+                    ref =
+                        Firebase.Database.Snapshot.ref snapshot
+
+                    key =
+                        Firebase.Database.Snapshot.key snapshot
+
+                    delete m key =
+                        case key of
+                            Nothing ->
+                                m
+
+                            Just str ->
+                                config.get m
+                                    |> FDict.remove_ str
+                                    |> config.set m
+                in
+                    ( delete model key
+                    , Cmd.none
+                    )
+
 
 subscribe : (Msg -> msg) -> Firebase.Database.Types.Database -> Config m v -> Sub msg
 subscribe tagger db config =
@@ -139,6 +162,6 @@ subscribe tagger db config =
             [ Time.every (Time.second * 2) (\time -> tagger (Heartbeat ref))
             , Firebase.Database.Reference.on "child_added" ref (\snapshot -> tagger (Snapshot snapshot))
             , Firebase.Database.Reference.on "child_changed" ref (\snapshot -> tagger (Snapshot snapshot))
-            , Firebase.Database.Reference.on "child_removed" ref (\snapshot -> tagger (Snapshot snapshot))
+            , Firebase.Database.Reference.on "child_removed" ref (\snapshot -> tagger (Remove snapshot))
             , Firebase.Database.Reference.on "child_moved" ref (\snapshot -> tagger (Snapshot snapshot))
             ]

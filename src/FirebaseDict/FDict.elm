@@ -22,6 +22,14 @@ insert k v fd =
     }
 
 
+remove : String -> FDict v -> FDict v
+remove k fd =
+    { fd
+        | values = Dict.remove k fd.values
+        , events = Dict.insert k Delete fd.events
+    }
+
+
 insert_ : String -> v -> FDict v -> FDict v
 insert_ k v fd =
     { fd
@@ -33,6 +41,7 @@ remove_ : String -> FDict v -> FDict v
 remove_ k fd =
     { fd
         | values = Dict.remove k fd.values
+        , events = Dict.remove k fd.events
     }
 
 
