@@ -7,13 +7,14 @@ import Firebase.Database.Types
 import Data
 import FirebaseDict
 import FirebaseDict.FDict as FDict
+import FirebaseDict.Types exposing (..)
 
 
 type alias Model =
     { mdl : Material.Model
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
-    , fooDict : FDict.FDict Data.Data
+    , fooDict : FDict Data.Data
     }
 
 

@@ -8,6 +8,7 @@ import Material.Layout as Layout
 --firebase
 
 import FirebaseDict
+import FirebaseDict.FDict as FDict
 
 
 -- Data
@@ -39,7 +40,7 @@ update msg model =
             Material.update Mdl msg_ model
 
         Push ->
-            ( model, Cmd.none )
+            ( { model | fooDict = FDict.insert "uuu" Data.empty model.fooDict }, Cmd.none )
 
         Set ->
             ( model, Cmd.none )

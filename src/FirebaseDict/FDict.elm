@@ -1,18 +1,7 @@
 module FirebaseDict.FDict exposing (..)
 
 import Dict
-
-
-type Event
-    = Set
-    | Delete
-
-
-type alias FDict v =
-    { values : Dict.Dict String v
-    , events : Dict.Dict String Event
-    }
-
+import FirebaseDict.Types exposing (..)
 
 
 -- build --------------
@@ -95,6 +84,12 @@ values fd =
 toListEvents : FDict v -> List ( String, Event )
 toListEvents fd =
     Dict.toList fd.events
+
+
+toListWithEvents : FDict v -> List ( String, Event, Maybe v )
+toListWithEvents fd =
+    Dict.toList fd.events
+        |> List.map (\( k, e ) -> ( k, e, get k fd ))
 
 
 toList : FDict v -> List ( String, v )
