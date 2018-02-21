@@ -50,7 +50,7 @@ update tagger msg model config =
             Heartbeat ref ->
                 let
                     _ =
-                        Debug.log "Heartbeat "
+                        Debug.log "Heartbeat " ""
 
                     command =
                         config.get model

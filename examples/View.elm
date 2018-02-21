@@ -108,4 +108,4 @@ renderContents : Model -> List (Html Msg)
 renderContents model =
     model.fooDict
         |> FDict.values
-        |> List.map Data.render
+        |> List.map (Data.render model)

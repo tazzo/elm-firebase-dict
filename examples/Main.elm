@@ -40,7 +40,7 @@ update msg model =
             Material.update Mdl msg_ model
 
         Push ->
-            ( { model | fooDict = FDict.insert "uuu" Data.empty model.fooDict }, Cmd.none )
+            ( { model | fooDict = FDict.insert "ttt" Data.empty model.fooDict }, Cmd.none )
 
         Set ->
             ( model, Cmd.none )

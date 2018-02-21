@@ -20543,48 +20543,49 @@ var _user$project$Data$encoder = function (c) {
 			}
 		});
 };
-var _user$project$Data$render = function (data) {
-	return A2(
-		_debois$elm_mdl$Material_Card$view,
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-			_1: {
+var _user$project$Data$render = F2(
+	function (data, model) {
+		return A2(
+			_debois$elm_mdl$Material_Card$view,
+			{
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Elevation$e2,
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
 				_1: {
 					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
-					_1: {ctor: '[]'}
+					_0: _debois$elm_mdl$Material_Elevation$e2,
+					_1: {
+						ctor: '::',
+						_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
+						_1: {ctor: '[]'}
+					}
 				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Card$text,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A3(
-						_debois$elm_mdl$Material_Options$styled,
-						_elm_lang$html$Html$p,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Typography$body1,
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(data)),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Card$text,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A3(
+							_debois$elm_mdl$Material_Options$styled,
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Typography$body1,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(data)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
 var _user$project$Data$empty = {bool: false, string: 'empty', $int: 0};
 var _user$project$Data$Data = F3(
 	function (a, b, c) {
@@ -20772,7 +20773,7 @@ var _user$project$FirebaseDict$update = F4(
 						eventToTask,
 						_user$project$FirebaseDict_FDict$toListWithEvents(
 							config.get(model))));
-				var _p8 = _elm_lang$core$Debug$log('Heartbeat ');
+				var _p8 = A2(_elm_lang$core$Debug$log, 'Heartbeat ', '');
 				return {
 					ctor: '_Tuple2',
 					_0: A2(
@@ -20925,7 +20926,7 @@ var _user$project$Model$Mdl = function (a) {
 var _user$project$View$renderContents = function (model) {
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$Data$render,
+		_user$project$Data$render(model),
 		_user$project$FirebaseDict_FDict$values(model.fooDict));
 };
 var _user$project$View$viewBody = function (model) {
@@ -21250,7 +21251,7 @@ var _user$project$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'uuu', _user$project$Data$empty, model.fooDict)
+							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'ttt', _user$project$Data$empty, model.fooDict)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
