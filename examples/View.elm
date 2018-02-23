@@ -126,21 +126,22 @@ renderData model i data =
                 [ Typo.body1 ]
                 [ text (toString data) ]
             ]
-        , Card.actions
-            [ Card.border
-            , css "vertical-align" "center"
-            , css "text-align" "right"
-            , Color.text Color.accent
-            ]
-            [ Button.render Mdl
-                [ 8, i ]
-                model.mdl
-                [ Button.icon, Button.ripple ]
-                [ Icon.i "create" ]
-            , Button.render Mdl
-                [ 8, i + 10 ]
-                model.mdl
-                [ Button.icon, Button.ripple ]
-                [ Icon.i "check" ]
-            ]
+
+        -- , Card.actions
+        --     [ Card.border
+        --     , css "vertical-align" "center"
+        --     , css "text-align" "right"
+        --     , Color.text Color.accent
+        --     ]
+        --     [ Button.render Mdl
+        --         [ 8, i ]
+        --         model.mdl
+        --         [ Button.icon, Button.ripple ]
+        --         [ Icon.i "create" ]
+        --     , Button.render Mdl
+        --         [ 8, i + 10 ]
+        --         model.mdl
+        --         [ Button.icon, Button.ripple ]
+        --         [ Icon.i "check" ]
+        --     ]
         ]

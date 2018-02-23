@@ -2,7 +2,6 @@ module FirebaseDict exposing (..)
 
 import FirebaseDict.FDict as FDict
 import FirebaseDict.Types exposing (..)
-import Json.Encode as JE
 import Json.Decode as JD
 import Time exposing (Time)
 import Task
@@ -15,15 +14,6 @@ import Firebase.Database.Snapshot
 import Firebase.Database.Reference
 import Firebase.Database.Types
 import Firebase.Errors exposing (Error)
-
-
-type alias Config m v =
-    { path : String
-    , encoder : v -> JE.Value
-    , decoder : JD.Decoder v
-    , get : m -> FDict v
-    , set : m -> FDict v -> m
-    }
 
 
 type Msg
@@ -45,24 +35,21 @@ update : (Msg -> msg) -> Msg -> m -> Config m v -> ( m, Cmd msg )
 update tagger msg model config =
     let
         _ =
-            Debug.log "update entry "
+            ""
     in
         case msg of
             Heartbeat ref ->
                 let
-                    _ =
-                        Debug.log "Heartbeat " ""
-
                     command =
                         config.get model
                             |> FDict.toListWithEvents
                             |> List.map eventToTask
                             |> Cmd.batch
 
-                    eventToTask ( k, e, mbv ) =
-                        case e of
+                    eventToTask ( k, event, maybe_value ) =
+                        case event of
                             Set ->
-                                case mbv of
+                                case maybe_value of
                                     Just v ->
                                         ref
                                             |> Firebase.Database.Reference.child k
@@ -76,23 +63,19 @@ update tagger msg model config =
                                 ref
                                     |> Firebase.Database.Reference.child k
                                     |> Firebase.Database.Reference.remove
-                                    |> Task.attempt (\v -> tagger (WriteStatus v))
+                                    |> Task.attempt (\x -> tagger (WriteStatus x))
                 in
                     ( config.set model (FDict.clearEvents (config.get model)), command )
 
-            WriteStatus (Ok _) ->
-                let
-                    _ =
-                        Debug.log "Firebase write success"
-                in
-                    ( model
-                    , Cmd.none
-                    )
+            WriteStatus (Ok v) ->
+                ( model
+                , Cmd.none
+                )
 
-            WriteStatus (Err _) ->
+            WriteStatus (Err err) ->
                 let
                     _ =
-                        Debug.log "Firebase write fail"
+                        Debug.log "Firebase write fail : " err
                 in
                     ( model
                     , Cmd.none
@@ -105,7 +88,6 @@ update tagger msg model config =
                         snapshot
                             |> Firebase.Database.Snapshot.value
                             |> JD.decodeValue config.decoder
-                            |> Debug.log "update Snapshot"
 
                     key =
                         Firebase.Database.Snapshot.key snapshot
@@ -146,8 +128,11 @@ update tagger msg model config =
                                 config.get m
                                     |> FDict.remove_ str
                                     |> config.set m
+
+                    newModel =
+                        delete model key
                 in
-                    ( delete model key
+                    ( newModel
                     , Cmd.none
                     )
 
@@ -159,9 +144,10 @@ subscribe tagger db config =
             Firebase.Database.ref (Just config.path) db
     in
         Sub.batch
-            [ Time.every (Time.second * 2) (\time -> tagger (Heartbeat ref))
+            [ Time.every (Time.second * 1) (\time -> tagger (Heartbeat ref))
             , Firebase.Database.Reference.on "child_added" ref (\snapshot -> tagger (Snapshot snapshot))
             , Firebase.Database.Reference.on "child_changed" ref (\snapshot -> tagger (Snapshot snapshot))
             , Firebase.Database.Reference.on "child_removed" ref (\snapshot -> tagger (Remove snapshot))
-            , Firebase.Database.Reference.on "child_moved" ref (\snapshot -> tagger (Snapshot snapshot))
+
+            -- , Firebase.Database.Reference.on "child_moved" ref (\snapshot -> tagger (Snapshot snapshot))
             ]

@@ -20576,6 +20576,10 @@ var _user$project$Data$deoder = A4(
 		},
 		_elm_lang$core$Json_Decode$int));
 
+var _user$project$FirebaseDict_Types$Config = F5(
+	function (a, b, c, d, e) {
+		return {path: a, encoder: b, decoder: c, get: d, set: e};
+	});
 var _user$project$FirebaseDict_Types$FDict = F2(
 	function (a, b) {
 		return {values: a, events: b};
@@ -20682,10 +20686,6 @@ _user$project$FirebaseDict_ops['&>'] = F2(
 			},
 			t1);
 	});
-var _user$project$FirebaseDict$Config = F5(
-	function (a, b, c, d, e) {
-		return {path: a, encoder: b, decoder: c, get: d, set: e};
-	});
 var _user$project$FirebaseDict$Remove = function (a) {
 	return {ctor: 'Remove', _0: a};
 };
@@ -20694,11 +20694,11 @@ var _user$project$FirebaseDict$WriteStatus = function (a) {
 };
 var _user$project$FirebaseDict$update = F4(
 	function (tagger, msg, model, config) {
-		var _p1 = _elm_lang$core$Debug$log('update entry ');
+		var _p1 = '';
 		var _p2 = msg;
 		switch (_p2.ctor) {
 			case 'Heartbeat':
-				var _p9 = _p2._0;
+				var _p8 = _p2._0;
 				var eventToTask = function (_p3) {
 					var _p4 = _p3;
 					var _p7 = _p4._0;
@@ -20715,7 +20715,7 @@ var _user$project$FirebaseDict$update = F4(
 								A2(
 									_pairshaped$elm_firebase$Firebase_Database_Reference$set,
 									config.encoder(_p6._0),
-									A2(_pairshaped$elm_firebase$Firebase_Database_Reference$child, _p7, _p9)));
+									A2(_pairshaped$elm_firebase$Firebase_Database_Reference$child, _p7, _p8)));
 						} else {
 							return A2(
 								_elm_lang$core$Task$attempt,
@@ -20729,12 +20729,12 @@ var _user$project$FirebaseDict$update = F4(
 					} else {
 						return A2(
 							_elm_lang$core$Task$attempt,
-							function (v) {
+							function (x) {
 								return tagger(
-									_user$project$FirebaseDict$WriteStatus(v));
+									_user$project$FirebaseDict$WriteStatus(x));
 							},
 							_pairshaped$elm_firebase$Firebase_Database_Reference$remove(
-								A2(_pairshaped$elm_firebase$Firebase_Database_Reference$child, _p7, _p9)));
+								A2(_pairshaped$elm_firebase$Firebase_Database_Reference$child, _p7, _p8)));
 					}
 				};
 				var command = _elm_lang$core$Platform_Cmd$batch(
@@ -20743,7 +20743,6 @@ var _user$project$FirebaseDict$update = F4(
 						eventToTask,
 						_user$project$FirebaseDict_FDict$toListWithEvents(
 							config.get(model))));
-				var _p8 = A2(_elm_lang$core$Debug$log, 'Heartbeat ', '');
 				return {
 					ctor: '_Tuple2',
 					_0: A2(
@@ -20755,19 +20754,18 @@ var _user$project$FirebaseDict$update = F4(
 				};
 			case 'WriteStatus':
 				if (_p2._0.ctor === 'Ok') {
-					var _p10 = _elm_lang$core$Debug$log('Firebase write success');
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				} else {
-					var _p11 = _elm_lang$core$Debug$log('Firebase write fail');
+					var _p9 = A2(_elm_lang$core$Debug$log, 'Firebase write fail : ', _p2._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			case 'Snapshot':
-				var _p14 = _p2._0;
-				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p14);
+				var _p12 = _p2._0;
+				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p12);
 				var insert = F2(
 					function (m, v) {
-						var _p12 = key;
-						if (_p12.ctor === 'Nothing') {
+						var _p10 = key;
+						if (_p10.ctor === 'Nothing') {
 							return m;
 						} else {
 							return A2(
@@ -20775,34 +20773,31 @@ var _user$project$FirebaseDict$update = F4(
 								m,
 								A3(
 									_user$project$FirebaseDict_FDict$insert_,
-									_p12._0,
+									_p10._0,
 									v,
 									config.get(m)));
 						}
 					});
 				var value = A2(
-					_elm_lang$core$Debug$log,
-					'update Snapshot',
-					A2(
-						_elm_lang$core$Json_Decode$decodeValue,
-						config.decoder,
-						_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p14)));
-				var _p13 = value;
-				if (_p13.ctor === 'Err') {
+					_elm_lang$core$Json_Decode$decodeValue,
+					config.decoder,
+					_pairshaped$elm_firebase$Firebase_Database_Snapshot$value(_p12));
+				var _p11 = value;
+				if (_p11.ctor === 'Err') {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				} else {
 					return {
 						ctor: '_Tuple2',
-						_0: A2(insert, model, _p13._0),
+						_0: A2(insert, model, _p11._0),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			default:
-				var _p16 = _p2._0;
+				var _p14 = _p2._0;
 				var $delete = F2(
 					function (m, key) {
-						var _p15 = key;
-						if (_p15.ctor === 'Nothing') {
+						var _p13 = key;
+						if (_p13.ctor === 'Nothing') {
 							return m;
 						} else {
 							return A2(
@@ -20810,17 +20805,14 @@ var _user$project$FirebaseDict$update = F4(
 								m,
 								A2(
 									_user$project$FirebaseDict_FDict$remove_,
-									_p15._0,
+									_p13._0,
 									config.get(m)));
 						}
 					});
-				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p16);
-				var ref = _pairshaped$elm_firebase$Firebase_Database_Snapshot$ref(_p16);
-				return {
-					ctor: '_Tuple2',
-					_0: A2($delete, model, key),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p14);
+				var newModel = A2($delete, model, key);
+				var ref = _pairshaped$elm_firebase$Firebase_Database_Snapshot$ref(_p14);
+				return {ctor: '_Tuple2', _0: newModel, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
 var _user$project$FirebaseDict$Snapshot = function (a) {
@@ -20840,7 +20832,7 @@ var _user$project$FirebaseDict$subscribe = F3(
 				ctor: '::',
 				_0: A2(
 					_elm_lang$core$Time$every,
-					_elm_lang$core$Time$second * 2,
+					_elm_lang$core$Time$second * 1,
 					function (time) {
 						return tagger(
 							_user$project$FirebaseDict$Heartbeat(ref));
@@ -20875,18 +20867,7 @@ var _user$project$FirebaseDict$subscribe = F3(
 									return tagger(
 										_user$project$FirebaseDict$Remove(snapshot));
 								}),
-							_1: {
-								ctor: '::',
-								_0: A3(
-									_pairshaped$elm_firebase$Firebase_Database_Reference$on,
-									'child_moved',
-									ref,
-									function (snapshot) {
-										return tagger(
-											_user$project$FirebaseDict$Snapshot(snapshot));
-									}),
-								_1: {ctor: '[]'}
-							}
+							_1: {ctor: '[]'}
 						}
 					}
 				}
@@ -20962,90 +20943,7 @@ var _user$project$View$renderData = F3(
 							}),
 						_1: {ctor: '[]'}
 					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_debois$elm_mdl$Material_Card$actions,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Card$border,
-							_1: {
-								ctor: '::',
-								_0: A2(_debois$elm_mdl$Material_Options$css, 'vertical-align', 'center'),
-								_1: {
-									ctor: '::',
-									_0: A2(_debois$elm_mdl$Material_Options$css, 'text-align', 'right'),
-									_1: {
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Color$text(_debois$elm_mdl$Material_Color$accent),
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						},
-						{
-							ctor: '::',
-							_0: A5(
-								_debois$elm_mdl$Material_Button$render,
-								_user$project$Model$Mdl,
-								{
-									ctor: '::',
-									_0: 8,
-									_1: {
-										ctor: '::',
-										_0: i,
-										_1: {ctor: '[]'}
-									}
-								},
-								model.mdl,
-								{
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Button$icon,
-									_1: {
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Button$ripple,
-										_1: {ctor: '[]'}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Icon$i('create'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A5(
-									_debois$elm_mdl$Material_Button$render,
-									_user$project$Model$Mdl,
-									{
-										ctor: '::',
-										_0: 8,
-										_1: {
-											ctor: '::',
-											_0: i + 10,
-											_1: {ctor: '[]'}
-										}
-									},
-									model.mdl,
-									{
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Button$icon,
-										_1: {
-											ctor: '::',
-											_0: _debois$elm_mdl$Material_Button$ripple,
-											_1: {ctor: '[]'}
-										}
-									},
-									{
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Icon$i('check'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			});
 	});
 var _user$project$View$renderContents = function (model) {
@@ -21371,17 +21269,34 @@ var _user$project$Main$update = F2(
 			case 'Mdl':
 				return A3(_debois$elm_mdl$Material$update, _user$project$Model$Mdl, _p0._0, model);
 			case 'Push':
+				var data = A2(_user$project$FirebaseDict_FDict$get, 'tt', model.fooDict);
+				var _p1 = data;
+				if (_p1.ctor === 'Nothing') {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var newdata = _elm_lang$core$Native_Utils.update(
+						_p1._0,
+						{string: 'ciao a tutti'});
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', newdata, model.fooDict)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'Set':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'ttt', _user$project$Data$empty, model.fooDict)
+							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', _user$project$Data$empty, model.fooDict)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'Set':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'Get':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			default:

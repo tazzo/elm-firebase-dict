@@ -8,6 +8,7 @@ import Material.Layout as Layout
 --firebase
 
 import FirebaseDict
+import FirebaseDict.Types
 import FirebaseDict.FDict as FDict
 
 
@@ -22,7 +23,7 @@ import Model exposing (..)
 import View exposing (..)
 
 
-dataConfig : FirebaseDict.Config Model Data.Data
+dataConfig : FirebaseDict.Types.Config Model Data.Data
 dataConfig =
     { path = "foo"
     , encoder = Data.encoder
@@ -40,10 +41,24 @@ update msg model =
             Material.update Mdl msg_ model
 
         Push ->
-            ( { model | fooDict = FDict.insert "ttt" Data.empty model.fooDict }, Cmd.none )
+            let
+                data : Maybe Data.Data
+                data =
+                    (FDict.get "tt" model.fooDict)
+            in
+                case data of
+                    Nothing ->
+                        ( model, Cmd.none )
+
+                    Just d ->
+                        let
+                            newdata =
+                                { d | string = "ciao a tutti" }
+                        in
+                            ( { model | fooDict = FDict.insert "tt" newdata model.fooDict }, Cmd.none )
 
         Set ->
-            ( model, Cmd.none )
+            ( { model | fooDict = FDict.insert "tt" Data.empty model.fooDict }, Cmd.none )
 
         Get ->
             ( model, Cmd.none )
