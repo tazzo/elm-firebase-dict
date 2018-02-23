@@ -20874,31 +20874,7 @@ var _user$project$FirebaseDict$subscribe = F3(
 			});
 	});
 
-var _user$project$Model$firebaseInit = {apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'};
-var _user$project$Model$initModel = function () {
-	var app = _pairshaped$elm_firebase$Firebase$init(_user$project$Model$firebaseInit);
-	return {
-		mdl: _debois$elm_mdl$Material$model,
-		app: app,
-		db: _pairshaped$elm_firebase$Firebase_Database$init(app),
-		fooDict: _user$project$FirebaseDict_FDict$empty
-	};
-}();
-var _user$project$Model$Model = F4(
-	function (a, b, c, d) {
-		return {mdl: a, app: b, db: c, fooDict: d};
-	});
-var _user$project$Model$FirebaseDictMsg = function (a) {
-	return {ctor: 'FirebaseDictMsg', _0: a};
-};
-var _user$project$Model$Get = {ctor: 'Get'};
-var _user$project$Model$Set = {ctor: 'Set'};
-var _user$project$Model$Push = {ctor: 'Push'};
-var _user$project$Model$Mdl = function (a) {
-	return {ctor: 'Mdl', _0: a};
-};
-
-var _user$project$View$renderData = F3(
+var _user$project$Main$renderData = F3(
 	function (model, i, data) {
 		return A2(
 			_debois$elm_mdl$Material_Card$view,
@@ -20946,18 +20922,216 @@ var _user$project$View$renderData = F3(
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$View$renderContents = function (model) {
+var _user$project$Main$renderContents = function (model) {
 	return A2(
 		_elm_lang$core$List$indexedMap,
-		_user$project$View$renderData(model),
+		_user$project$Main$renderData(model),
 		_user$project$FirebaseDict_FDict$values(model.fooDict));
 };
-var _user$project$View$viewBody = function (model) {
+var _user$project$Main$header = function (model) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_debois$elm_mdl$Material_Layout$row,
+			{
+				ctor: '::',
+				_0: A2(_debois$elm_mdl$Material_Options$css, 'transition', 'height 333ms ease-in-out 0s'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Layout$title,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Elm Firebase Dict Sync - Demo'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	};
+};
+var _user$project$Main$dataConfig = {
+	path: 'foo',
+	encoder: _user$project$Data$encoder,
+	decoder: _user$project$Data$deoder,
+	get: function (_) {
+		return _.fooDict;
+	},
+	set: F2(
+		function (m, v) {
+			return _elm_lang$core$Native_Utils.update(
+				m,
+				{fooDict: v});
+		})
+};
+var _user$project$Main$firebaseInit = {apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'};
+var _user$project$Main$initModel = function () {
+	var app = _pairshaped$elm_firebase$Firebase$init(_user$project$Main$firebaseInit);
+	return {
+		mdl: _debois$elm_mdl$Material$model,
+		app: app,
+		db: _pairshaped$elm_firebase$Firebase_Database$init(app),
+		fooDict: _user$project$FirebaseDict_FDict$empty
+	};
+}();
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {mdl: a, app: b, db: c, fooDict: d};
+	});
+var _user$project$Main$FirebaseDictMsg = function (a) {
+	return {ctor: 'FirebaseDictMsg', _0: a};
+};
+var _user$project$Main$Get = {ctor: 'Get'};
+var _user$project$Main$Set = {ctor: 'Set'};
+var _user$project$Main$Push = {ctor: 'Push'};
+var _user$project$Main$Mdl = function (a) {
+	return {ctor: 'Mdl', _0: a};
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'Mdl':
+				return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
+			case 'Push':
+				var data = A2(_user$project$FirebaseDict_FDict$get, 'tt', model.fooDict);
+				var _p1 = data;
+				if (_p1.ctor === 'Nothing') {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					var newdata = _elm_lang$core$Native_Utils.update(
+						_p1._0,
+						{string: 'ciao a tutti'});
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', newdata, model.fooDict)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'Set':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', _user$project$Data$empty, model.fooDict)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Get':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return A4(_user$project$FirebaseDict$update, _user$project$Main$FirebaseDictMsg, _p0._0, model, _user$project$Main$dataConfig);
+		}
+	});
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Layout$subs, _user$project$Main$Mdl, model.mdl),
+			_1: {
+				ctor: '::',
+				_0: A3(_user$project$FirebaseDict$subscribe, _user$project$Main$FirebaseDictMsg, model.db, _user$project$Main$dataConfig),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$button1 = function (model) {
+	return A5(
+		_debois$elm_mdl$Material_Button$render,
+		_user$project$Main$Mdl,
+		{
+			ctor: '::',
+			_0: 2,
+			_1: {
+				ctor: '::',
+				_0: 1,
+				_1: {ctor: '[]'}
+			}
+		},
+		model.mdl,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Button$ripple,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('button1'),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$drawer = function (model) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_debois$elm_mdl$Material_Layout$navigation,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Layout$title,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Examples'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$button1(model),
+					_1: {ctor: '[]'}
+				}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Layout$navigation,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Layout$title,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Github'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Layout$link,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-firebase-dict'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('elm-firebase-dict'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		}
+	};
+};
+var _user$project$Main$viewBody = function (model) {
 	var createButton = F5(
 		function (model, mdlMsg, mdlId, txt, tagger) {
 			return A5(
 				_debois$elm_mdl$Material_Button$render,
-				_user$project$Model$Mdl,
+				_user$project$Main$Mdl,
 				{
 					ctor: '::',
 					_0: 0,
@@ -21009,7 +21183,7 @@ var _user$project$View$viewBody = function (model) {
 					_0: A5(
 						createButton,
 						model,
-						_user$project$Model$Mdl,
+						_user$project$Main$Mdl,
 						{
 							ctor: '::',
 							_0: 0,
@@ -21020,7 +21194,7 @@ var _user$project$View$viewBody = function (model) {
 							}
 						},
 						'Push',
-						_user$project$Model$Push),
+						_user$project$Main$Push),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -21041,7 +21215,7 @@ var _user$project$View$viewBody = function (model) {
 						_0: A5(
 							createButton,
 							model,
-							_user$project$Model$Mdl,
+							_user$project$Main$Mdl,
 							{
 								ctor: '::',
 								_0: 0,
@@ -21052,7 +21226,7 @@ var _user$project$View$viewBody = function (model) {
 								}
 							},
 							'Once',
-							_user$project$Model$Get),
+							_user$project$Main$Get),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -21073,7 +21247,7 @@ var _user$project$View$viewBody = function (model) {
 							_0: A5(
 								createButton,
 								model,
-								_user$project$Model$Mdl,
+								_user$project$Main$Mdl,
 								{
 									ctor: '::',
 									_0: 0,
@@ -21084,7 +21258,7 @@ var _user$project$View$viewBody = function (model) {
 									}
 								},
 								'Set',
-								_user$project$Model$Set),
+								_user$project$Main$Set),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -21100,125 +21274,17 @@ var _user$project$View$viewBody = function (model) {
 									_1: {ctor: '[]'}
 								}
 							},
-							_user$project$View$renderContents(model)),
+							_user$project$Main$renderContents(model)),
 						_1: {ctor: '[]'}
 					}
 				}
 			}
 		});
 };
-var _user$project$View$header = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_debois$elm_mdl$Material_Layout$row,
-			{
-				ctor: '::',
-				_0: A2(_debois$elm_mdl$Material_Options$css, 'transition', 'height 333ms ease-in-out 0s'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Layout$title,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Elm Firebase Dict Sync - Demo'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}),
-		_1: {ctor: '[]'}
-	};
-};
-var _user$project$View$button1 = function (model) {
-	return A5(
-		_debois$elm_mdl$Material_Button$render,
-		_user$project$Model$Mdl,
-		{
-			ctor: '::',
-			_0: 2,
-			_1: {
-				ctor: '::',
-				_0: 1,
-				_1: {ctor: '[]'}
-			}
-		},
-		model.mdl,
-		{
-			ctor: '::',
-			_0: _debois$elm_mdl$Material_Button$ripple,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('button1'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$View$drawer = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_debois$elm_mdl$Material_Layout$navigation,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Layout$title,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Examples'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _user$project$View$button1(model),
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Layout$navigation,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_debois$elm_mdl$Material_Layout$title,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Github'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_debois$elm_mdl$Material_Layout$link,
-							{
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-firebase-dict'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('elm-firebase-dict'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		}
-	};
-};
-var _user$project$View$render = function (model) {
+var _user$project$Main$renderView = function (model) {
 	return A4(
 		_debois$elm_mdl$Material_Layout$render,
-		_user$project$Model$Mdl,
+		_user$project$Main$Mdl,
 		model.mdl,
 		{
 			ctor: '::',
@@ -21230,8 +21296,8 @@ var _user$project$View$render = function (model) {
 			}
 		},
 		{
-			header: _user$project$View$header(model),
-			drawer: _user$project$View$drawer(model),
+			header: _user$project$Main$header(model),
+			drawer: _user$project$Main$drawer(model),
 			tabs: {
 				ctor: '_Tuple2',
 				_0: {ctor: '[]'},
@@ -21239,88 +21305,20 @@ var _user$project$View$render = function (model) {
 			},
 			main: {
 				ctor: '::',
-				_0: _user$project$View$viewBody(model),
+				_0: _user$project$Main$viewBody(model),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-
 var _user$project$Main$view = function (model) {
-	return _user$project$View$render(model);
-};
-var _user$project$Main$dataConfig = {
-	path: 'foo',
-	encoder: _user$project$Data$encoder,
-	decoder: _user$project$Data$deoder,
-	get: function (_) {
-		return _.fooDict;
-	},
-	set: F2(
-		function (m, v) {
-			return _elm_lang$core$Native_Utils.update(
-				m,
-				{fooDict: v});
-		})
-};
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'Mdl':
-				return A3(_debois$elm_mdl$Material$update, _user$project$Model$Mdl, _p0._0, model);
-			case 'Push':
-				var data = A2(_user$project$FirebaseDict_FDict$get, 'tt', model.fooDict);
-				var _p1 = data;
-				if (_p1.ctor === 'Nothing') {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-				} else {
-					var newdata = _elm_lang$core$Native_Utils.update(
-						_p1._0,
-						{string: 'ciao a tutti'});
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', newdata, model.fooDict)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			case 'Set':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							fooDict: A3(_user$project$FirebaseDict_FDict$insert, 'tt', _user$project$Data$empty, model.fooDict)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Get':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			default:
-				return A4(_user$project$FirebaseDict$update, _user$project$Model$FirebaseDictMsg, _p0._0, model, _user$project$Main$dataConfig);
-		}
-	});
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Layout$subs, _user$project$Model$Mdl, model.mdl),
-			_1: {
-				ctor: '::',
-				_0: A3(_user$project$FirebaseDict$subscribe, _user$project$Model$FirebaseDictMsg, model.db, _user$project$Main$dataConfig),
-				_1: {ctor: '[]'}
-			}
-		});
+	return _user$project$Main$renderView(model);
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: {
 			ctor: '_Tuple2',
-			_0: _user$project$Model$initModel,
-			_1: _debois$elm_mdl$Material_Layout$sub0(_user$project$Model$Mdl)
+			_0: _user$project$Main$initModel,
+			_1: _debois$elm_mdl$Material_Layout$sub0(_user$project$Main$Mdl)
 		},
 		view: _user$project$Main$view,
 		subscriptions: _user$project$Main$subscriptions,
@@ -21330,7 +21328,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Model.Msg":{"args":[],"tags":{"Set":[],"Get":[],"FirebaseDictMsg":["FirebaseDict.Msg"],"Mdl":["Material.Msg Model.Msg"],"Push":[]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"FirebaseDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Model.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"Get":[],"FirebaseDictMsg":["FirebaseDict.Msg"],"Mdl":["Material.Msg Main.Msg"],"Push":[]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"FirebaseDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
