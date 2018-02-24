@@ -1,6 +1,8 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Json.Encode as JE
+import Json.Decode as JD
 
 
 -- MDL
@@ -27,11 +29,6 @@ import FirebaseDict.Types exposing (..)
 import FirebaseDict.FDict as FDict
 
 
--- Data
-
-import Data
-
-
 -- Model -------------------------
 
 
@@ -39,16 +36,14 @@ type alias Model =
     { mdl : Material.Model
     , app : Firebase.App
     , db : Firebase.Database.Types.Database
-    , fooDict : FDict Data.Data
+    , fooDict : FDict Todo
     }
 
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | Push
-    | Set
-    | Get
     | FirebaseDictMsg FirebaseDict.Msg
+    | Set
 
 
 firebaseInit : Firebase.Config
@@ -75,14 +70,36 @@ initModel =
         }
 
 
-dataConfig : FirebaseDict.Types.Config Model Data.Data
+
+-- Todo --------------------
+
+
+dataConfig : FirebaseDict.Types.Config Model Todo
 dataConfig =
     { path = "foo"
-    , encoder = Data.encoder
-    , decoder = Data.deoder
+    , encoder =
+        \c ->
+            JE.object
+                [ ( "bool", JE.bool c.bool )
+                , ( "string", JE.string c.string )
+                ]
+    , decoder =
+        JD.map2 Todo
+            (JD.at [ "bool" ] JD.bool)
+            (JD.at [ "string" ] JD.string)
     , get = .fooDict
     , set = \m v -> { m | fooDict = v }
     }
+
+
+type alias Todo =
+    { bool : Bool
+    , string : String
+    }
+
+
+
+-- Update ------------------------------------
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -92,37 +109,16 @@ update msg model =
         Mdl msg_ ->
             Material.update Mdl msg_ model
 
-        Push ->
-            let
-                data : Maybe Data.Data
-                data =
-                    (FDict.get "tt" model.fooDict)
-            in
-                case data of
-                    Nothing ->
-                        ( model, Cmd.none )
-
-                    Just d ->
-                        let
-                            newdata =
-                                { d | string = "ciao a tutti" }
-                        in
-                            ( { model | fooDict = FDict.insert "tt" newdata model.fooDict }, Cmd.none )
-
-        Set ->
-            ( { model | fooDict = FDict.insert "tt" Data.empty model.fooDict }, Cmd.none )
-
-        Get ->
-            ( model, Cmd.none )
-
         -- Boilerplate: FirebaseDict action handler.
         FirebaseDictMsg msg ->
             FirebaseDict.update FirebaseDictMsg msg model dataConfig
 
+        Set ->
+            ( model, Cmd.none )
 
-view : Model -> Html Msg
-view model =
-    renderView model
+
+
+-- Subscriptions -----------------------------------
 
 
 subscriptions : Model -> Sub Msg
@@ -131,6 +127,10 @@ subscriptions model =
         [ Layout.subs Mdl model.mdl
         , FirebaseDict.subscribe FirebaseDictMsg model.db dataConfig
         ]
+
+
+
+-- Main  -----------------------------------
 
 
 main : Program Never Model Msg
@@ -144,7 +144,12 @@ main =
 
 
 
--- View --------------------------
+-- View -----------------------------------
+
+
+view : Model -> Html Msg
+view model =
+    renderView model
 
 
 renderView : Model -> Html Msg
@@ -218,12 +223,12 @@ viewBody model =
                 [ size All 1
                 , stretch
                 ]
-                [ createButton model Mdl [ 0, 11 ] "Push" Push ]
+                [ createButton model Mdl [ 0, 11 ] "Push" Set ]
             , cell
                 [ size All 1
                 , stretch
                 ]
-                [ createButton model Mdl [ 0, 12 ] "Once" Get ]
+                [ createButton model Mdl [ 0, 12 ] "Once" Set ]
             , cell
                 [ size All 1
                 , stretch
@@ -244,7 +249,7 @@ renderContents model =
         |> List.indexedMap (renderData model)
 
 
-renderData : Model -> Int -> Data.Data -> Html Msg
+renderData : Model -> Int -> Todo -> Html Msg
 renderData model i data =
     Card.view
         [ Color.background (Color.color Color.Grey Color.S200)
@@ -257,22 +262,4 @@ renderData model i data =
                 [ Typo.body1 ]
                 [ text (toString data) ]
             ]
-
-        -- , Card.actions
-        --     [ Card.border
-        --     , css "vertical-align" "center"
-        --     , css "text-align" "right"
-        --     , Color.text Color.accent
-        --     ]
-        --     [ Button.render Mdl
-        --         [ 8, i ]
-        --         model.mdl
-        --         [ Button.icon, Button.ripple ]
-        --         [ Icon.i "create" ]
-        --     , Button.render Mdl
-        --         [ 8, i + 10 ]
-        --         model.mdl
-        --         [ Button.icon, Button.ripple ]
-        --         [ Icon.i "check" ]
-        --     ]
         ]
