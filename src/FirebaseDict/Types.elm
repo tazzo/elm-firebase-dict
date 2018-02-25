@@ -9,8 +9,8 @@ type alias Config m v =
     { path : String
     , encoder : v -> JE.Value
     , decoder : JD.Decoder v
-    , get : m -> FDict v
-    , set : m -> FDict v -> m
+    , getDict : m -> FDict v
+    , setDict : m -> FDict v -> m
     }
 
 

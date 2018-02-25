@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.Events exposing (..)
 import Json.Encode as JE
 import Json.Decode as JD
 
@@ -11,6 +12,7 @@ import Material
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Card as Card
+import Material.Textfield as Textfield
 import Material.Options as Options
 import Material.Options as Options exposing (css)
 import Material.Elevation as Elevation
@@ -22,8 +24,8 @@ import Material.Typography as Typo
 --firebase
 
 import Firebase
-import Firebase.Database
-import Firebase.Database.Types
+import Firebase.Database as Database
+import Firebase.Database.Types as DBTypes
 import FirebaseDict
 import FirebaseDict.Types exposing (..)
 import FirebaseDict.FDict as FDict
@@ -35,8 +37,9 @@ import FirebaseDict.FDict as FDict
 type alias Model =
     { mdl : Material.Model
     , app : Firebase.App
-    , db : Firebase.Database.Types.Database
+    , db : DBTypes.Database
     , fooDict : FDict Todo
+    , text : String
     }
 
 
@@ -44,6 +47,8 @@ type Msg
     = Mdl (Material.Msg Msg)
     | FirebaseDictMsg FirebaseDict.Msg
     | Set
+    | UpdateField String
+    | Add
 
 
 firebaseInit : Firebase.Config
@@ -65,8 +70,9 @@ initModel =
     in
         { mdl = Material.model
         , app = app
-        , db = Firebase.Database.init app
+        , db = Database.init app
         , fooDict = FDict.empty
+        , text = ""
         }
 
 
@@ -87,8 +93,8 @@ dataConfig =
         JD.map2 Todo
             (JD.at [ "bool" ] JD.bool)
             (JD.at [ "string" ] JD.string)
-    , get = .fooDict
-    , set = \m v -> { m | fooDict = v }
+    , getDict = .fooDict
+    , setDict = \m v -> { m | fooDict = v }
     }
 
 
@@ -114,7 +120,25 @@ update msg model =
             FirebaseDict.update FirebaseDictMsg msg model dataConfig
 
         Set ->
-            ( model, Cmd.none )
+            ( { model | fooDict = FDict.remove "tt" model.fooDict }
+            , Cmd.none
+            )
+
+        Add ->
+            let
+                todo =
+                    Todo False model.text
+
+                key =
+                    FirebaseDict.newKey model.db dataConfig
+
+                dict =
+                    FDict.insert key todo model.fooDict
+            in
+                ( { model | fooDict = dict, text = "" }, Cmd.none )
+
+        UpdateField str ->
+            ( { model | text = str }, Cmd.none )
 
 
 
@@ -171,29 +195,12 @@ drawer : Model -> List (Html Msg)
 drawer model =
     [ Layout.navigation
         []
-        [ Layout.title [] [ text "Examples" ]
-        , button1 model
-        ]
-    , Layout.navigation
-        []
         [ Layout.title [] [ text "Github" ]
         , Layout.link
             [ Layout.href "https://github.com/tazzo/elm-firebase-dict" ]
             [ text "elm-firebase-dict" ]
         ]
     ]
-
-
-button1 : Model -> Html Msg
-button1 model =
-    Button.render Mdl
-        [ 2, 1 ]
-        model.mdl
-        [ Button.ripple
-
-        -- , Options.onClick <| InputChange example1
-        ]
-        [ text "button1" ]
 
 
 header : Model -> List (Html Msg)
@@ -217,23 +224,35 @@ viewBody model =
                 , Options.onClick tagger
                 ]
                 [ text txt ]
+
+        -- onEnter ------------------
+        onEnter msg =
+            let
+                isEnter code =
+                    if code == 13 then
+                        JD.succeed msg
+                    else
+                        JD.fail "not ENTER"
+            in
+                Options.on "keydown" (JD.andThen isEnter keyCode)
     in
         grid [ Color.background (Color.color Color.Grey Color.S100) ]
             [ cell
-                [ size All 1
+                [ size All 12
                 , stretch
                 ]
-                [ createButton model Mdl [ 0, 11 ] "Push" Set ]
-            , cell
-                [ size All 1
-                , stretch
+                [ Textfield.render Mdl
+                    [ 2 ]
+                    model.mdl
+                    [ Textfield.label "What needs to be done?"
+                    , Textfield.floatingLabel
+                    , Textfield.text_
+                    , Textfield.value model.text
+                    , Options.onInput UpdateField
+                    , onEnter Add
+                    ]
+                    []
                 ]
-                [ createButton model Mdl [ 0, 12 ] "Once" Set ]
-            , cell
-                [ size All 1
-                , stretch
-                ]
-                [ createButton model Mdl [ 0, 13 ] "Set" Set ]
             , cell
                 [ size All 12
                 , stretch
@@ -246,6 +265,7 @@ renderContents : Model -> List (Html Msg)
 renderContents model =
     model.fooDict
         |> FDict.values
+        |> List.reverse
         |> List.indexedMap (renderData model)
 
 

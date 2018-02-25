@@ -20517,7 +20517,7 @@ var _pairshaped$elm_firebase$Firebase_Database_Snapshot$key = _pairshaped$elm_fi
 
 var _user$project$FirebaseDict_Types$Config = F5(
 	function (a, b, c, d, e) {
-		return {path: a, encoder: b, decoder: c, get: d, set: e};
+		return {path: a, encoder: b, decoder: c, getDict: d, setDict: e};
 	});
 var _user$project$FirebaseDict_Types$FDict = F2(
 	function (a, b) {
@@ -20615,6 +20615,15 @@ var _user$project$FirebaseDict_FDict$insert = F3(
 	});
 var _user$project$FirebaseDict_FDict$empty = {values: _elm_lang$core$Dict$empty, events: _elm_lang$core$Dict$empty};
 
+var _user$project$FirebaseDict$newKey = F2(
+	function (db, config) {
+		return _pairshaped$elm_firebase$Firebase_Database_Reference$key(
+			_pairshaped$elm_firebase$Firebase_Database_Reference$push(
+				A2(
+					_pairshaped$elm_firebase$Firebase_Database$ref,
+					_elm_lang$core$Maybe$Just(config.path),
+					db)));
+	});
 var _user$project$FirebaseDict_ops = _user$project$FirebaseDict_ops || {};
 _user$project$FirebaseDict_ops['&>'] = F2(
 	function (t1, t2) {
@@ -20681,14 +20690,14 @@ var _user$project$FirebaseDict$update = F4(
 						_elm_lang$core$List$map,
 						eventToTask,
 						_user$project$FirebaseDict_FDict$toListWithEvents(
-							config.get(model))));
+							config.getDict(model))));
 				return {
 					ctor: '_Tuple2',
 					_0: A2(
-						config.set,
+						config.setDict,
 						model,
 						_user$project$FirebaseDict_FDict$clearEvents(
-							config.get(model))),
+							config.getDict(model))),
 					_1: command
 				};
 			case 'WriteStatus':
@@ -20708,13 +20717,13 @@ var _user$project$FirebaseDict$update = F4(
 							return m;
 						} else {
 							return A2(
-								config.set,
+								config.setDict,
 								m,
 								A3(
 									_user$project$FirebaseDict_FDict$insert_,
 									_p10._0,
 									v,
-									config.get(m)));
+									config.getDict(m)));
 						}
 					});
 				var value = A2(
@@ -20732,7 +20741,6 @@ var _user$project$FirebaseDict$update = F4(
 					};
 				}
 			default:
-				var _p14 = _p2._0;
 				var $delete = F2(
 					function (m, key) {
 						var _p13 = key;
@@ -20740,18 +20748,20 @@ var _user$project$FirebaseDict$update = F4(
 							return m;
 						} else {
 							return A2(
-								config.set,
+								config.setDict,
 								m,
 								A2(
 									_user$project$FirebaseDict_FDict$remove_,
 									_p13._0,
-									config.get(m)));
+									config.getDict(m)));
 						}
 					});
-				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p14);
-				var newModel = A2($delete, model, key);
-				var ref = _pairshaped$elm_firebase$Firebase_Database_Snapshot$ref(_p14);
-				return {ctor: '_Tuple2', _0: newModel, _1: _elm_lang$core$Platform_Cmd$none};
+				var key = _pairshaped$elm_firebase$Firebase_Database_Snapshot$key(_p2._0);
+				return {
+					ctor: '_Tuple2',
+					_0: A2($delete, model, key),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$FirebaseDict$Snapshot = function (a) {
@@ -20865,7 +20875,8 @@ var _user$project$Main$renderContents = function (model) {
 	return A2(
 		_elm_lang$core$List$indexedMap,
 		_user$project$Main$renderData(model),
-		_user$project$FirebaseDict_FDict$values(model.fooDict));
+		_elm_lang$core$List$reverse(
+			_user$project$FirebaseDict_FDict$values(model.fooDict)));
 };
 var _user$project$Main$header = function (model) {
 	return {
@@ -20892,6 +20903,42 @@ var _user$project$Main$header = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
+var _user$project$Main$drawer = function (model) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_debois$elm_mdl$Material_Layout$navigation,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Layout$title,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Github'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Layout$link,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-firebase-dict'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('elm-firebase-dict'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}),
+		_1: {ctor: '[]'}
+	};
+};
 var _user$project$Main$firebaseInit = {apiKey: 'AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U', authDomain: 'elm-firebase-try01.firebaseapp.com', databaseURL: 'https://elm-firebase-try01.firebaseio.com', projectId: 'elm-firebase-try01', storageBucket: 'elm-firebase-try01.appspot.com', messagingSenderId: '747855250165'};
 var _user$project$Main$initModel = function () {
 	var app = _pairshaped$elm_firebase$Firebase$init(_user$project$Main$firebaseInit);
@@ -20899,12 +20946,13 @@ var _user$project$Main$initModel = function () {
 		mdl: _debois$elm_mdl$Material$model,
 		app: app,
 		db: _pairshaped$elm_firebase$Firebase_Database$init(app),
-		fooDict: _user$project$FirebaseDict_FDict$empty
+		fooDict: _user$project$FirebaseDict_FDict$empty,
+		text: ''
 	};
 }();
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {mdl: a, app: b, db: c, fooDict: d};
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {mdl: a, app: b, db: c, fooDict: d, text: e};
 	});
 var _user$project$Main$Todo = F2(
 	function (a, b) {
@@ -20951,15 +20999,19 @@ var _user$project$Main$dataConfig = {
 				_1: {ctor: '[]'}
 			},
 			_elm_lang$core$Json_Decode$string)),
-	get: function (_) {
+	getDict: function (_) {
 		return _.fooDict;
 	},
-	set: F2(
+	setDict: F2(
 		function (m, v) {
 			return _elm_lang$core$Native_Utils.update(
 				m,
 				{fooDict: v});
 		})
+};
+var _user$project$Main$Add = {ctor: 'Add'};
+var _user$project$Main$UpdateField = function (a) {
+	return {ctor: 'UpdateField', _0: a};
 };
 var _user$project$Main$Set = {ctor: 'Set'};
 var _user$project$Main$FirebaseDictMsg = function (a) {
@@ -20976,8 +21028,35 @@ var _user$project$Main$update = F2(
 				return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
 			case 'FirebaseDictMsg':
 				return A4(_user$project$FirebaseDict$update, _user$project$Main$FirebaseDictMsg, _p0._0, model, _user$project$Main$dataConfig);
+			case 'Set':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							fooDict: A2(_user$project$FirebaseDict_FDict$remove, 'tt', model.fooDict)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Add':
+				var key = A2(_user$project$FirebaseDict$newKey, model.db, _user$project$Main$dataConfig);
+				var todo = A2(_user$project$Main$Todo, false, model.text);
+				var dict = A3(_user$project$FirebaseDict_FDict$insert, key, todo, model.fooDict);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{fooDict: dict, text: ''}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{text: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$subscriptions = function (model) {
@@ -20992,90 +21071,16 @@ var _user$project$Main$subscriptions = function (model) {
 			}
 		});
 };
-var _user$project$Main$button1 = function (model) {
-	return A5(
-		_debois$elm_mdl$Material_Button$render,
-		_user$project$Main$Mdl,
-		{
-			ctor: '::',
-			_0: 2,
-			_1: {
-				ctor: '::',
-				_0: 1,
-				_1: {ctor: '[]'}
-			}
-		},
-		model.mdl,
-		{
-			ctor: '::',
-			_0: _debois$elm_mdl$Material_Button$ripple,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('button1'),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$drawer = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_debois$elm_mdl$Material_Layout$navigation,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Layout$title,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Examples'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$button1(model),
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Layout$navigation,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_debois$elm_mdl$Material_Layout$title,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Github'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_debois$elm_mdl$Material_Layout$link,
-							{
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Layout$href('https://github.com/tazzo/elm-firebase-dict'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('elm-firebase-dict'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		}
-	};
-};
 var _user$project$Main$viewBody = function (model) {
+	var onEnter = function (msg) {
+		var isEnter = function (code) {
+			return _elm_lang$core$Native_Utils.eq(code, 13) ? _elm_lang$core$Json_Decode$succeed(msg) : _elm_lang$core$Json_Decode$fail('not ENTER');
+		};
+		return A2(
+			_debois$elm_mdl$Material_Options$on,
+			'keydown',
+			A2(_elm_lang$core$Json_Decode$andThen, isEnter, _elm_lang$html$Html_Events$keyCode));
+	};
 	var createButton = F5(
 		function (model, mdlMsg, mdlId, txt, tagger) {
 			return A5(
@@ -21120,7 +21125,7 @@ var _user$project$Main$viewBody = function (model) {
 				_debois$elm_mdl$Material_Grid$cell,
 				{
 					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
+					_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
 					_1: {
 						ctor: '::',
 						_0: _debois$elm_mdl$Material_Grid$stretch,
@@ -21130,20 +21135,40 @@ var _user$project$Main$viewBody = function (model) {
 				{
 					ctor: '::',
 					_0: A5(
-						createButton,
-						model,
+						_debois$elm_mdl$Material_Textfield$render,
 						_user$project$Main$Mdl,
 						{
 							ctor: '::',
-							_0: 0,
+							_0: 2,
+							_1: {ctor: '[]'}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Textfield$label('What needs to be done?'),
 							_1: {
 								ctor: '::',
-								_0: 11,
-								_1: {ctor: '[]'}
+								_0: _debois$elm_mdl$Material_Textfield$floatingLabel,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Textfield$text_,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Textfield$value(model.text),
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Options$onInput(_user$project$Main$UpdateField),
+											_1: {
+												ctor: '::',
+												_0: onEnter(_user$project$Main$Add),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
 							}
 						},
-						'Push',
-						_user$project$Main$Set),
+						{ctor: '[]'}),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -21152,81 +21177,15 @@ var _user$project$Main$viewBody = function (model) {
 					_debois$elm_mdl$Material_Grid$cell,
 					{
 						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
+						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
 						_1: {
 							ctor: '::',
 							_0: _debois$elm_mdl$Material_Grid$stretch,
 							_1: {ctor: '[]'}
 						}
 					},
-					{
-						ctor: '::',
-						_0: A5(
-							createButton,
-							model,
-							_user$project$Main$Mdl,
-							{
-								ctor: '::',
-								_0: 0,
-								_1: {
-									ctor: '::',
-									_0: 12,
-									_1: {ctor: '[]'}
-								}
-							},
-							'Once',
-							_user$project$Main$Set),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_debois$elm_mdl$Material_Grid$cell,
-						{
-							ctor: '::',
-							_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 1),
-							_1: {
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Grid$stretch,
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: A5(
-								createButton,
-								model,
-								_user$project$Main$Mdl,
-								{
-									ctor: '::',
-									_0: 0,
-									_1: {
-										ctor: '::',
-										_0: 13,
-										_1: {ctor: '[]'}
-									}
-								},
-								'Set',
-								_user$project$Main$Set),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_debois$elm_mdl$Material_Grid$cell,
-							{
-								ctor: '::',
-								_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
-								_1: {
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Grid$stretch,
-									_1: {ctor: '[]'}
-								}
-							},
-							_user$project$Main$renderContents(model)),
-						_1: {ctor: '[]'}
-					}
-				}
+					_user$project$Main$renderContents(model)),
+				_1: {ctor: '[]'}
 			}
 		});
 };
@@ -21277,7 +21236,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"FirebaseDictMsg":["FirebaseDict.Msg"],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"FirebaseDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"UpdateField":["String"],"FirebaseDictMsg":["FirebaseDict.Msg"],"Add":[],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"FirebaseDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
