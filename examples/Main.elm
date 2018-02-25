@@ -23,12 +23,7 @@ import Material.Typography as Typo
 
 --firebase
 
-import Firebase
-import Firebase.Database as Database
-import Firebase.Database.Types as DBTypes
-import FirebaseDict
-import FirebaseDict.Types exposing (..)
-import FirebaseDict.FDict as FDict
+import FDict
 
 
 -- Model -------------------------
@@ -36,23 +31,32 @@ import FirebaseDict.FDict as FDict
 
 type alias Model =
     { mdl : Material.Model
-    , app : Firebase.App
-    , db : DBTypes.Database
-    , fooDict : FDict Todo
+    , fooDict : FDict.FDict Todo
     , text : String
     }
 
 
 type Msg
     = Mdl (Material.Msg Msg)
-    | FirebaseDictMsg FirebaseDict.Msg
+    | FDictMsg FDict.Msg
     | Set
     | UpdateField String
     | Add
 
 
-firebaseInit : Firebase.Config
-firebaseInit =
+initModel : Model
+initModel =
+    { mdl = Material.model
+    , fooDict = FDict.empty
+    , text = ""
+    }
+
+
+
+-- Todo data--------------------
+
+
+firebaseConfig =
     { apiKey = "AIzaSyCYC8DiqgnpH5ea1FEwVAewNT-mBHB0-6U"
     , authDomain = "elm-firebase-try01.firebaseapp.com"
     , databaseURL = "https://elm-firebase-try01.firebaseio.com"
@@ -62,40 +66,31 @@ firebaseInit =
     }
 
 
-initModel : Model
-initModel =
-    let
-        app =
-            Firebase.init firebaseInit
-    in
-        { mdl = Material.model
-        , app = app
-        , db = Database.init app
-        , fooDict = FDict.empty
-        , text = ""
-        }
+encoder =
+    \c ->
+        JE.object
+            [ ( "bool", JE.bool c.bool )
+            , ( "string", JE.string c.string )
+            ]
 
 
+decoder =
+    JD.map2 Todo
+        (JD.at [ "bool" ] JD.bool)
+        (JD.at [ "string" ] JD.string)
 
--- Todo --------------------
+
+getter =
+    .fooDict
 
 
-dataConfig : FirebaseDict.Types.Config Model Todo
-dataConfig =
-    { path = "foo"
-    , encoder =
-        \c ->
-            JE.object
-                [ ( "bool", JE.bool c.bool )
-                , ( "string", JE.string c.string )
-                ]
-    , decoder =
-        JD.map2 Todo
-            (JD.at [ "bool" ] JD.bool)
-            (JD.at [ "string" ] JD.string)
-    , getDict = .fooDict
-    , setDict = \m v -> { m | fooDict = v }
-    }
+setter =
+    \m v -> { m | fooDict = v }
+
+
+todoConfig : FDict.Manager Model Todo
+todoConfig =
+    FDict.initManager firebaseConfig "foo" encoder decoder getter setter
 
 
 type alias Todo =
@@ -116,8 +111,8 @@ update msg model =
             Material.update Mdl msg_ model
 
         -- Boilerplate: FirebaseDict action handler.
-        FirebaseDictMsg msg ->
-            FirebaseDict.update FirebaseDictMsg msg model dataConfig
+        FDictMsg msg ->
+            FDict.update FDictMsg msg model todoConfig
 
         Set ->
             ( { model | fooDict = FDict.remove "tt" model.fooDict }
@@ -130,7 +125,7 @@ update msg model =
                     Todo False model.text
 
                 key =
-                    FirebaseDict.newKey model.db dataConfig
+                    FDict.newKey todoConfig
 
                 dict =
                     FDict.insert key todo model.fooDict
@@ -149,7 +144,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Layout.subs Mdl model.mdl
-        , FirebaseDict.subscribe FirebaseDictMsg model.db dataConfig
+        , FDict.subscribe FDictMsg todoConfig
         ]
 
 
