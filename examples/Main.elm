@@ -12,6 +12,7 @@ import Material
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Card as Card
+import Material.Toggles as Toggles
 import Material.Textfield as Textfield
 import Material.Options as Options
 import Material.Options as Options exposing (css)
@@ -42,6 +43,7 @@ type Msg
     | Set
     | UpdateField String
     | Add
+    | ToggleMsg String
 
 
 initModel : Model
@@ -80,17 +82,15 @@ decoder =
         (JD.at [ "string" ] JD.string)
 
 
-getter =
-    .fooDict
-
-
-setter =
-    \m v -> { m | fooDict = v }
-
-
 todoConfig : FDict.Manager Model Todo
 todoConfig =
-    FDict.initManager firebaseConfig "foo" encoder decoder getter setter
+    FDict.initManager
+        firebaseConfig
+        "foo"
+        encoder
+        decoder
+        (.fooDict)
+        (\m v -> { m | fooDict = v })
 
 
 type alias Todo =
@@ -134,6 +134,25 @@ update msg model =
 
         UpdateField str ->
             ( { model | text = str }, Cmd.none )
+
+        ToggleMsg key ->
+            let
+                maybetodo =
+                    model.fooDict |> FDict.get key
+
+                newModel =
+                    case maybetodo of
+                        Nothing ->
+                            model
+
+                        Just todo ->
+                            let
+                                newDict =
+                                    FDict.insert key { todo | bool = not todo.bool } model.fooDict
+                            in
+                                { model | fooDict = newDict }
+            in
+                ( newModel, Cmd.none )
 
 
 
@@ -249,7 +268,7 @@ viewBody model =
                     []
                 ]
             , cell
-                [ size All 12
+                [ size All 6
                 , stretch
                 ]
                 (renderContents model)
@@ -259,22 +278,40 @@ viewBody model =
 renderContents : Model -> List (Html Msg)
 renderContents model =
     model.fooDict
-        |> FDict.values
+        |> FDict.toList
         |> List.reverse
         |> List.indexedMap (renderData model)
 
 
-renderData : Model -> Int -> Todo -> Html Msg
-renderData model i data =
-    Card.view
-        [ Color.background (Color.color Color.Grey Color.S200)
-        , css "width" "100%"
-        , Elevation.e2
-        , css "margin" "4px 8px 10px 0px"
-        ]
-        [ Card.text []
-            [ Options.styled p
-                [ Typo.body1 ]
-                [ text (toString data) ]
+renderData : Model -> Int -> ( String, Todo ) -> Html Msg
+renderData model i ( key, todo ) =
+    let
+        colorTodo =
+            case todo.bool of
+                True ->
+                    (Color.color Color.Grey Color.S600)
+
+                False ->
+                    (Color.color Color.Grey Color.S200)
+    in
+        Card.view
+            [ Color.background colorTodo
+            , css "width" "100%"
+            , Elevation.e2
+            , css "margin" "4px 8px 10px 0px"
             ]
-        ]
+            [ Card.text []
+                [ Options.styled p
+                    [ Typo.body1 ]
+                    [ Toggles.switch Mdl
+                        [ 0, 2, i ]
+                        model.mdl
+                        [ Options.onToggle <| ToggleMsg key
+                        , Toggles.ripple
+                        , Toggles.value todo.bool
+                        ]
+                        []
+                    , text todo.string
+                    ]
+                ]
+            ]

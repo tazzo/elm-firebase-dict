@@ -16,10 +16,6 @@
     },
 
     "dependency-sources": {
-      "tazzo/elm-markdown-math": {
-        "url": "https://github.com/tazzo/elm-markdown-math",
-        "ref": "1.0.0"
-      },
 
       "pairshaped/elm-firebase": {
         "url": "https://github.com/tazzo/elm-firebase",
