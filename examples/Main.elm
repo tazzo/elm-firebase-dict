@@ -137,10 +137,7 @@ update msg model =
 
         ToggleMsg key ->
             let
-                maybetodo =
-                    model.fooDict |> FDict.get key
-
-                newModel =
+                newModel maybetodo =
                     case maybetodo of
                         Nothing ->
                             model
@@ -152,7 +149,11 @@ update msg model =
                             in
                                 { model | fooDict = newDict }
             in
-                ( newModel, Cmd.none )
+                ( model.fooDict
+                    |> FDict.get key
+                    |> newModel
+                , Cmd.none
+                )
 
 
 

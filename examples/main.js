@@ -21009,8 +21009,7 @@ var _user$project$Main$update = F2(
 				};
 			default:
 				var _p3 = _p0._0;
-				var maybetodo = A2(_user$project$FDict$get, _p3, model.fooDict);
-				var newModel = function () {
+				var newModel = function (maybetodo) {
 					var _p1 = maybetodo;
 					if (_p1.ctor === 'Nothing') {
 						return model;
@@ -21027,8 +21026,13 @@ var _user$project$Main$update = F2(
 							model,
 							{fooDict: newDict});
 					}
-				}();
-				return {ctor: '_Tuple2', _0: newModel, _1: _elm_lang$core$Platform_Cmd$none};
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: newModel(
+						A2(_user$project$FDict$get, _p3, model.fooDict)),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$subscriptions = function (model) {
