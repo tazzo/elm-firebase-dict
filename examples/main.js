@@ -20831,61 +20831,6 @@ var _user$project$FDict$subscribe = F2(
 			});
 	});
 
-var _user$project$Main$renderData = F3(
-	function (model, i, data) {
-		return A2(
-			_debois$elm_mdl$Material_Card$view,
-			{
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Color$background(
-					A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200)),
-				_1: {
-					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-					_1: {
-						ctor: '::',
-						_0: _debois$elm_mdl$Material_Elevation$e2,
-						_1: {
-							ctor: '::',
-							_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Card$text,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A3(
-							_debois$elm_mdl$Material_Options$styled,
-							_elm_lang$html$Html$p,
-							{
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Typography$body1,
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(data)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$renderContents = function (model) {
-	return A2(
-		_elm_lang$core$List$indexedMap,
-		_user$project$Main$renderData(model),
-		_elm_lang$core$List$reverse(
-			_user$project$FDict$values(model.fooDict)));
-};
 var _user$project$Main$header = function (model) {
 	return {
 		ctor: '::',
@@ -20947,15 +20892,6 @@ var _user$project$Main$drawer = function (model) {
 		_1: {ctor: '[]'}
 	};
 };
-var _user$project$Main$setter = F2(
-	function (m, v) {
-		return _elm_lang$core$Native_Utils.update(
-			m,
-			{fooDict: v});
-	});
-var _user$project$Main$getter = function (_) {
-	return _.fooDict;
-};
 var _user$project$Main$encoder = function (c) {
 	return _elm_lang$core$Json_Encode$object(
 		{
@@ -21005,7 +20941,24 @@ var _user$project$Main$decoder = A3(
 			_1: {ctor: '[]'}
 		},
 		_elm_lang$core$Json_Decode$string));
-var _user$project$Main$todoConfig = A6(_user$project$FDict$initManager, _user$project$Main$firebaseConfig, 'foo', _user$project$Main$encoder, _user$project$Main$decoder, _user$project$Main$getter, _user$project$Main$setter);
+var _user$project$Main$todoConfig = A6(
+	_user$project$FDict$initManager,
+	_user$project$Main$firebaseConfig,
+	'foo',
+	_user$project$Main$encoder,
+	_user$project$Main$decoder,
+	function (_) {
+		return _.fooDict;
+	},
+	F2(
+		function (m, v) {
+			return _elm_lang$core$Native_Utils.update(
+				m,
+				{fooDict: v});
+		}));
+var _user$project$Main$ToggleMsg = function (a) {
+	return {ctor: 'ToggleMsg', _0: a};
+};
 var _user$project$Main$Add = {ctor: 'Add'};
 var _user$project$Main$UpdateField = function (a) {
 	return {ctor: 'UpdateField', _0: a};
@@ -21046,12 +20999,38 @@ var _user$project$Main$update = F2(
 						{fooDict: dict, text: ''}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'UpdateField':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{text: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var _p3 = _p0._0;
+				var newModel = function (maybetodo) {
+					var _p1 = maybetodo;
+					if (_p1.ctor === 'Nothing') {
+						return model;
+					} else {
+						var _p2 = _p1._0;
+						var newDict = A3(
+							_user$project$FDict$insert,
+							_p3,
+							_elm_lang$core$Native_Utils.update(
+								_p2,
+								{bool: !_p2.bool}),
+							model.fooDict);
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{fooDict: newDict});
+					}
+				};
+				return {
+					ctor: '_Tuple2',
+					_0: newModel(
+						A2(_user$project$FDict$get, _p3, model.fooDict)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -21067,6 +21046,104 @@ var _user$project$Main$subscriptions = function (model) {
 				_1: {ctor: '[]'}
 			}
 		});
+};
+var _user$project$Main$renderData = F3(
+	function (model, i, _p4) {
+		var _p5 = _p4;
+		var _p7 = _p5._1;
+		var colorTodo = function () {
+			var _p6 = _p7.bool;
+			if (_p6 === true) {
+				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S600);
+			} else {
+				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200);
+			}
+		}();
+		return A2(
+			_debois$elm_mdl$Material_Card$view,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$background(colorTodo),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Elevation$e2,
+						_1: {
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Card$text,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A3(
+							_debois$elm_mdl$Material_Options$styled,
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Typography$body1,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A5(
+									_debois$elm_mdl$Material_Toggles$switch,
+									_user$project$Main$Mdl,
+									{
+										ctor: '::',
+										_0: 0,
+										_1: {
+											ctor: '::',
+											_0: 2,
+											_1: {
+												ctor: '::',
+												_0: i,
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									model.mdl,
+									{
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options$onToggle(
+											_user$project$Main$ToggleMsg(_p5._0)),
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Toggles$ripple,
+											_1: {
+												ctor: '::',
+												_0: _debois$elm_mdl$Material_Toggles$value(_p7.bool),
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(_p7.string),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$renderContents = function (model) {
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		_user$project$Main$renderData(model),
+		_elm_lang$core$List$reverse(
+			_user$project$FDict$toList(model.fooDict)));
 };
 var _user$project$Main$viewBody = function (model) {
 	var onEnter = function (msg) {
@@ -21174,7 +21251,7 @@ var _user$project$Main$viewBody = function (model) {
 					_debois$elm_mdl$Material_Grid$cell,
 					{
 						ctor: '::',
-						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 12),
+						_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 6),
 						_1: {
 							ctor: '::',
 							_0: _debois$elm_mdl$Material_Grid$stretch,
@@ -21233,7 +21310,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"FDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"UpdateField":["String"],"Add":[],"FDictMsg":["FDict.Msg"],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"FDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"UpdateField":["String"],"ToggleMsg":["String"],"Add":[],"FDictMsg":["FDict.Msg"],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
