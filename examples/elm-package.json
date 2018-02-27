@@ -11,15 +11,10 @@
         "debois/elm-mdl": "8.1.0 <= v < 9.0.0",
         "elm-lang/core": "5.1.1 <= v < 6.0.0",
         "elm-lang/html": "2.0.0 <= v < 3.0.0",
-        "tazzo/elm-markdown-math": "1.0.0 <= v < 2.0.0",
         "pairshaped/elm-firebase": "0.0.14 <= v < 1.0.0"
     },
 
     "dependency-sources": {
-      "tazzo/elm-markdown-math": {
-        "url": "https://github.com/tazzo/elm-markdown-math",
-        "ref": "1.0.0"
-      },
 
       "pairshaped/elm-firebase": {
         "url": "https://github.com/tazzo/elm-firebase",
