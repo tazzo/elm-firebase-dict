@@ -9,6 +9,7 @@ import Json.Decode as JD
 -- MDL
 
 import Material
+import Material.Icon as Icon
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Card as Card
@@ -44,6 +45,7 @@ type Msg
     | UpdateField String
     | Add
     | ToggleMsg String
+    | DeleteMsg String
 
 
 initModel : Model
@@ -154,6 +156,15 @@ update msg model =
                     |> newModel
                 , Cmd.none
                 )
+
+        DeleteMsg key ->
+            ( { model
+                | fooDict =
+                    model.fooDict
+                        |> FDict.remove key
+              }
+            , Cmd.none
+            )
 
 
 
@@ -294,14 +305,26 @@ renderData model i ( key, todo ) =
 
                 False ->
                     (Color.color Color.Grey Color.S200)
-    in
-        Card.view
-            [ Color.background colorTodo
-            , css "width" "100%"
-            , Elevation.e2
-            , css "margin" "4px 8px 10px 0px"
-            ]
-            [ Card.text []
+
+        deleteAction =
+            case todo.bool of
+                True ->
+                    [ Card.actions
+                        [ Card.border, css "vertical-align" "center", css "text-align" "right", Color.text Color.white ]
+                        [ Button.render Mdl
+                            [ 8, i ]
+                            model.mdl
+                            [ Button.icon, Button.ripple, Options.onClick <| DeleteMsg key ]
+                            [ Icon.i "highlight_off" ]
+                        ]
+                    ]
+
+                False ->
+                    []
+
+        card =
+            (Card.text
+                []
                 [ Options.styled p
                     [ Typo.body1 ]
                     [ Toggles.switch Mdl
@@ -315,4 +338,13 @@ renderData model i ( key, todo ) =
                     , text todo.string
                     ]
                 ]
+            )
+                :: deleteAction
+    in
+        Card.view
+            [ Color.background colorTodo
+            , css "width" "100%"
+            , Elevation.e2
+            , css "margin" "4px 8px 10px 0px"
             ]
+            card

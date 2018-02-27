@@ -20956,6 +20956,9 @@ var _user$project$Main$todoConfig = A6(
 				m,
 				{fooDict: v});
 		}));
+var _user$project$Main$DeleteMsg = function (a) {
+	return {ctor: 'DeleteMsg', _0: a};
+};
 var _user$project$Main$ToggleMsg = function (a) {
 	return {ctor: 'ToggleMsg', _0: a};
 };
@@ -21007,7 +21010,7 @@ var _user$project$Main$update = F2(
 						{text: _p0._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'ToggleMsg':
 				var _p3 = _p0._0;
 				var newModel = function (maybetodo) {
 					var _p1 = maybetodo;
@@ -21033,6 +21036,16 @@ var _user$project$Main$update = F2(
 						A2(_user$project$FDict$get, _p3, model.fooDict)),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							fooDict: A2(_user$project$FDict$remove, _p0._0, model.fooDict)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
 var _user$project$Main$subscriptions = function (model) {
@@ -21050,10 +21063,136 @@ var _user$project$Main$subscriptions = function (model) {
 var _user$project$Main$renderData = F3(
 	function (model, i, _p4) {
 		var _p5 = _p4;
-		var _p7 = _p5._1;
-		var colorTodo = function () {
-			var _p6 = _p7.bool;
+		var _p9 = _p5._1;
+		var _p8 = _p5._0;
+		var deleteAction = function () {
+			var _p6 = _p9.bool;
 			if (_p6 === true) {
+				return {
+					ctor: '::',
+					_0: A2(
+						_debois$elm_mdl$Material_Card$actions,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Card$border,
+							_1: {
+								ctor: '::',
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'vertical-align', 'center'),
+								_1: {
+									ctor: '::',
+									_0: A2(_debois$elm_mdl$Material_Options$css, 'text-align', 'right'),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Color$text(_debois$elm_mdl$Material_Color$white),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A5(
+								_debois$elm_mdl$Material_Button$render,
+								_user$project$Main$Mdl,
+								{
+									ctor: '::',
+									_0: 8,
+									_1: {
+										ctor: '::',
+										_0: i,
+										_1: {ctor: '[]'}
+									}
+								},
+								model.mdl,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Button$icon,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Button$ripple,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Options$onClick(
+												_user$project$Main$DeleteMsg(_p8)),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Icon$i('highlight_off'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				};
+			} else {
+				return {ctor: '[]'};
+			}
+		}();
+		var card = {
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Card$text,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A3(
+						_debois$elm_mdl$Material_Options$styled,
+						_elm_lang$html$Html$p,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Typography$body1,
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A5(
+								_debois$elm_mdl$Material_Toggles$switch,
+								_user$project$Main$Mdl,
+								{
+									ctor: '::',
+									_0: 0,
+									_1: {
+										ctor: '::',
+										_0: 2,
+										_1: {
+											ctor: '::',
+											_0: i,
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								model.mdl,
+								{
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$onToggle(
+										_user$project$Main$ToggleMsg(_p8)),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Toggles$ripple,
+										_1: {
+											ctor: '::',
+											_0: _debois$elm_mdl$Material_Toggles$value(_p9.bool),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(_p9.string),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: deleteAction
+		};
+		var colorTodo = function () {
+			var _p7 = _p9.bool;
+			if (_p7 === true) {
 				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S600);
 			} else {
 				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200);
@@ -21078,65 +21217,7 @@ var _user$project$Main$renderData = F3(
 					}
 				}
 			},
-			{
-				ctor: '::',
-				_0: A2(
-					_debois$elm_mdl$Material_Card$text,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A3(
-							_debois$elm_mdl$Material_Options$styled,
-							_elm_lang$html$Html$p,
-							{
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Typography$body1,
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A5(
-									_debois$elm_mdl$Material_Toggles$switch,
-									_user$project$Main$Mdl,
-									{
-										ctor: '::',
-										_0: 0,
-										_1: {
-											ctor: '::',
-											_0: 2,
-											_1: {
-												ctor: '::',
-												_0: i,
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									model.mdl,
-									{
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Options$onToggle(
-											_user$project$Main$ToggleMsg(_p5._0)),
-										_1: {
-											ctor: '::',
-											_0: _debois$elm_mdl$Material_Toggles$ripple,
-											_1: {
-												ctor: '::',
-												_0: _debois$elm_mdl$Material_Toggles$value(_p7.bool),
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(_p7.string),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			});
+			card);
 	});
 var _user$project$Main$renderContents = function (model) {
 	return A2(
@@ -21310,7 +21391,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"FDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"UpdateField":["String"],"ToggleMsg":["String"],"Add":[],"FDictMsg":["FDict.Msg"],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Material.Component.Msg":{"args":["button","textfield","menu","layout","toggles","tooltip","tabs","dispatch"],"tags":{"TooltipMsg":["Material.Component.Index","tooltip"],"TogglesMsg":["Material.Component.Index","toggles"],"LayoutMsg":["layout"],"ButtonMsg":["Material.Component.Index","button"],"MenuMsg":["Material.Component.Index","menu"],"TabsMsg":["Material.Component.Index","tabs"],"Dispatch":["dispatch"],"TextfieldMsg":["Material.Component.Index","textfield"]}},"Material.Ripple.Msg":{"args":[],"tags":{"Down":["Material.Ripple.DOMState"],"Up":[],"Tick":[]}},"FDict.Msg":{"args":[],"tags":{"Snapshot":["Firebase.Database.Types.Snapshot"],"Remove":["Firebase.Database.Types.Snapshot"],"WriteStatus":["Result.Result Firebase.Errors.Error ()"],"Heartbeat":["Firebase.Database.Types.Reference"]}},"Firebase.Database.Types.Reference":{"args":[],"tags":{"Reference":[]}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Firebase.Errors.Error":{"args":[],"tags":{"AppDeleted":[],"TooManyRequests":[],"OperationNotAllowed":[],"InvalidUserToken":[],"RequiresRecentLogin":[],"UnauthorizedDomain":[],"WebStorageUnsupported":[],"NetworkRequestFailed":[],"UserTokenExpired":[],"AppNotAuthorized":[],"ArgumentError":[],"InvalidApiKey":[]}},"Firebase.Database.Types.Snapshot":{"args":[],"tags":{"Snapshot":[]}},"Main.Msg":{"args":[],"tags":{"Set":[],"DeleteMsg":["String"],"UpdateField":["String"],"ToggleMsg":["String"],"Add":[],"FDictMsg":["FDict.Msg"],"Mdl":["Material.Msg Main.Msg"]}},"Material.Tooltip.Msg":{"args":[],"tags":{"Enter":["Material.Tooltip.DOMState"],"Leave":[]}},"Json.Decode.Decoder":{"args":["a"],"tags":{"Decoder":[]}},"Material.Textfield.Msg":{"args":[],"tags":{"Focus":[],"Input":["String"],"Blur":[]}},"Material.Layout.Msg":{"args":[],"tags":{"Resize":["Int"],"ToggleDrawer":[],"TransitionEnd":[],"ScrollPane":["Bool","Float"],"Ripple":["Int","Material.Ripple.Msg"],"ScrollTab":["Material.Layout.TabScrollState"],"TransitionHeader":["{ toCompact : Bool, fixedHeader : Bool }"],"NOP":[]}},"Material.Toggles.Msg":{"args":[],"tags":{"Ripple":["Material.Ripple.Msg"],"SetFocus":["Bool"]}},"VirtualDom.Property":{"args":["msg"],"tags":{"Property":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Material.Tabs.Msg":{"args":[],"tags":{"Ripple":["Int","Material.Ripple.Msg"]}},"Material.Menu.Msg":{"args":["m"],"tags":{"Tick":[],"Close":[],"Open":["Material.Menu.Geometry.Geometry"],"Key":["List (Material.Options.Internal.Summary (Material.Menu.ItemConfig m) m)","Int"],"Ripple":["Int","Material.Ripple.Msg"],"Select":["Int","Maybe.Maybe m"],"Click":["Mouse.Position"]}},"Material.Dispatch.Config":{"args":["msg"],"tags":{"Config":["{ decoders : List ( String , ( Json.Decode.Decoder msg, Maybe.Maybe Html.Events.Options ) ) , lift : Maybe.Maybe (Json.Decode.Decoder (List msg) -> Json.Decode.Decoder msg) }"]}}},"aliases":{"Material.Button.Msg":{"args":[],"type":"Material.Ripple.Msg"},"Material.Layout.TabScrollState":{"args":[],"type":"{ canScrollLeft : Bool , canScrollRight : Bool , width : Maybe.Maybe Int }"},"Material.Tooltip.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle, offsetWidth : Float, offsetHeight : Float }"},"Html.Attribute":{"args":["msg"],"type":"VirtualDom.Property msg"},"Material.Menu.ItemConfig":{"args":["m"],"type":"{ enabled : Bool, divider : Bool, onSelect : Maybe.Maybe m }"},"Material.Component.Index":{"args":[],"type":"List Int"},"Html.Events.Options":{"args":[],"type":"{ stopPropagation : Bool, preventDefault : Bool }"},"Material.Ripple.DOMState":{"args":[],"type":"{ rect : DOM.Rectangle , clientX : Maybe.Maybe Float , clientY : Maybe.Maybe Float , touchX : Maybe.Maybe Float , touchY : Maybe.Maybe Float , type_ : String }"},"Mouse.Position":{"args":[],"type":"{ x : Int, y : Int }"},"Material.Options.Internal.Summary":{"args":["c","m"],"type":"{ classes : List String , css : List ( String, String ) , attrs : List (Html.Attribute m) , internal : List (Html.Attribute m) , dispatch : Material.Dispatch.Config m , config : c }"},"Material.Msg":{"args":["m"],"type":"Material.Component.Msg Material.Button.Msg Material.Textfield.Msg (Material.Menu.Msg m) Material.Layout.Msg Material.Toggles.Msg Material.Tooltip.Msg Material.Tabs.Msg (List m)"},"Material.Menu.Geometry.Element":{"args":[],"type":"{ offsetTop : Float , offsetLeft : Float , offsetHeight : Float , bounds : DOM.Rectangle }"},"Material.Menu.Geometry.Geometry":{"args":[],"type":"{ button : Material.Menu.Geometry.Element , menu : Material.Menu.Geometry.Element , container : Material.Menu.Geometry.Element , offsetTops : List Float , offsetHeights : List Float }"},"DOM.Rectangle":{"args":[],"type":"{ top : Float, left : Float, width : Float, height : Float }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
