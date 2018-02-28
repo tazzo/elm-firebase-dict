@@ -13,8 +13,6 @@ import Material.Icon as Icon
 import Material.Layout as Layout
 import Material.Color as Color
 import Material.Card as Card
-import Material.Toggles as Toggles
-import Material.Tooltip as Tooltip
 import Material.Textfield as Textfield
 import Material.Options as Options
 import Material.Options as Options exposing (css)
@@ -85,8 +83,8 @@ decoder =
         (JD.at [ "string" ] JD.string)
 
 
-todoConfig : FDict.Manager Model Todo
-todoConfig =
+todoManager : FDict.Manager Model Todo
+todoManager =
     FDict.initManager
         firebaseConfig
         "foo"
@@ -115,7 +113,7 @@ update msg model =
 
         -- Boilerplate: FirebaseDict action handler.
         FDictMsg msg ->
-            FDict.update FDictMsg msg model todoConfig
+            FDict.update FDictMsg msg model todoManager
 
         Set ->
             ( { model | fooDict = FDict.remove "tt" model.fooDict }
@@ -126,14 +124,14 @@ update msg model =
             let
                 todo =
                     Todo False model.text
-
-                key =
-                    FDict.newKey todoConfig
-
-                dict =
-                    FDict.insert key todo model.fooDict
             in
-                ( { model | fooDict = dict, text = "" }, Cmd.none )
+                ( FDict.insertInModel
+                    model
+                    todoManager
+                    (FDict.newKey todoManager)
+                    todo
+                , Cmd.none
+                )
 
         UpdateField str ->
             ( { model | text = str }, Cmd.none )
@@ -176,7 +174,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ Layout.subs Mdl model.mdl
-        , FDict.subscribe FDictMsg todoConfig
+        , FDict.subscribe FDictMsg todoManager
         ]
 
 
@@ -271,7 +269,7 @@ viewBody model =
                 [ Textfield.render Mdl
                     [ 2 ]
                     model.mdl
-                    [ Textfield.label "What needs to be done?"
+                    [ Textfield.label "TODO"
                     , Textfield.floatingLabel
                     , Textfield.text_
                     , Textfield.value model.text
@@ -299,48 +297,33 @@ renderContents model =
 renderData : Model -> Int -> ( String, Todo ) -> Html Msg
 renderData model i ( key, todo ) =
     let
-        colorTodo =
+        ( imageString, colorTodo, actionColor ) =
             case todo.bool of
                 True ->
-                    (Color.color Color.Grey Color.S600)
+                    ( "check_box"
+                    , Color.color Color.Grey Color.S600
+                    , Color.color Color.Grey Color.S800
+                    )
 
                 False ->
-                    (Color.color Color.Grey Color.S200)
+                    ( "check_box_outline_blank"
+                    , Color.color Color.Grey Color.S200
+                    , Color.color Color.Grey Color.S600
+                    )
 
         deleteAction =
             case todo.bool of
                 True ->
-                    [ Card.actions
-                        [ Card.border, css "vertical-align" "center", css "text-align" "right", Color.text Color.white ]
-                        [ Button.render Mdl
-                            [ 8, i ]
-                            model.mdl
-                            [ Button.icon, Button.ripple, Options.onClick <| DeleteMsg key ]
-                            [ Icon.i "highlight_off" ]
-                        ]
+                    [ Layout.spacer
+                    , Button.render Mdl
+                        [ 8, i + 100 ]
+                        model.mdl
+                        [ Button.icon, Button.ripple, Options.onClick <| DeleteMsg key ]
+                        [ Icon.i "highlight_off" ]
                     ]
 
                 False ->
                     []
-
-        card =
-            (Card.text
-                []
-                [ Options.styled p
-                    [ Typo.body1 ]
-                    [ Toggles.switch Mdl
-                        [ 0, 2, i ]
-                        model.mdl
-                        [ Options.onToggle <| ToggleMsg key
-                        , Toggles.ripple
-                        , Toggles.value todo.bool
-                        ]
-                        []
-                    , text todo.string
-                    ]
-                ]
-            )
-                :: deleteAction
     in
         Card.view
             [ Color.background colorTodo
@@ -348,4 +331,23 @@ renderData model i ( key, todo ) =
             , Elevation.e2
             , css "margin" "4px 8px 10px 0px"
             ]
-            card
+            [ Card.text
+                []
+                [ Options.styled p
+                    [ Typo.body1 ]
+                    [ text todo.string
+                    ]
+                ]
+            , Card.actions
+                [ Card.border
+                , css "display" "flex"
+                , Color.text actionColor
+                ]
+                (Button.render Mdl
+                    [ 8, i ]
+                    model.mdl
+                    [ Button.icon, Button.ripple, Options.onClick <| ToggleMsg key ]
+                    [ Icon.i imageString ]
+                    :: deleteAction
+                )
+            ]

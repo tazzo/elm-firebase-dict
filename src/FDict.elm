@@ -211,6 +211,13 @@ insert k v fd =
     }
 
 
+insertInModel : m -> Manager m v -> String -> v -> m
+insertInModel model manager k v =
+    manager.getDict model
+        |> insert k v
+        |> manager.setDict model
+
+
 remove : String -> FDict v -> FDict v
 remove k fd =
     { fd

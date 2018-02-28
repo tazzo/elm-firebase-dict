@@ -16684,6 +16684,17 @@ var _user$project$FDict$insert = F3(
 				events: A3(_elm_lang$core$Dict$insert, k, _user$project$FDict$Set, fd.events)
 			});
 	});
+var _user$project$FDict$insertInModel = F4(
+	function (model, manager, k, v) {
+		return A2(
+			manager.setDict,
+			model,
+			A3(
+				_user$project$FDict$insert,
+				k,
+				v,
+				manager.getDict(model)));
+	});
 var _user$project$FDict$Remove = function (a) {
 	return {ctor: 'Remove', _0: a};
 };
@@ -16982,7 +16993,7 @@ var _user$project$Main$decoder = A3(
 			_1: {ctor: '[]'}
 		},
 		_elm_lang$core$Json_Decode$string));
-var _user$project$Main$todoConfig = A6(
+var _user$project$Main$todoManager = A6(
 	_user$project$FDict$initManager,
 	_user$project$Main$firebaseConfig,
 	'foo',
@@ -17021,7 +17032,7 @@ var _user$project$Main$update = F2(
 			case 'Mdl':
 				return A3(_debois$elm_mdl$Material$update, _user$project$Main$Mdl, _p0._0, model);
 			case 'FDictMsg':
-				return A4(_user$project$FDict$update, _user$project$Main$FDictMsg, _p0._0, model, _user$project$Main$todoConfig);
+				return A4(_user$project$FDict$update, _user$project$Main$FDictMsg, _p0._0, model, _user$project$Main$todoManager);
 			case 'Set':
 				return {
 					ctor: '_Tuple2',
@@ -17033,14 +17044,15 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Add':
-				var key = _user$project$FDict$newKey(_user$project$Main$todoConfig);
 				var todo = A2(_user$project$Main$Todo, false, model.text);
-				var dict = A3(_user$project$FDict$insert, key, todo, model.fooDict);
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
+					_0: A4(
+						_user$project$FDict$insertInModel,
 						model,
-						{fooDict: dict, text: ''}),
+						_user$project$Main$todoManager,
+						_user$project$FDict$newKey(_user$project$Main$todoManager),
+						todo),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'UpdateField':
@@ -17096,7 +17108,7 @@ var _user$project$Main$subscriptions = function (model) {
 			_0: A2(_debois$elm_mdl$Material_Layout$subs, _user$project$Main$Mdl, model.mdl),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$FDict$subscribe, _user$project$Main$FDictMsg, _user$project$Main$todoConfig),
+				_0: A2(_user$project$FDict$subscribe, _user$project$Main$FDictMsg, _user$project$Main$todoManager),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -17104,12 +17116,118 @@ var _user$project$Main$subscriptions = function (model) {
 var _user$project$Main$renderData = F3(
 	function (model, i, _p4) {
 		var _p5 = _p4;
-		var _p9 = _p5._1;
-		var _p8 = _p5._0;
+		var _p10 = _p5._1;
+		var _p9 = _p5._0;
 		var deleteAction = function () {
-			var _p6 = _p9.bool;
+			var _p6 = _p10.bool;
 			if (_p6 === true) {
 				return {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Layout$spacer,
+					_1: {
+						ctor: '::',
+						_0: A5(
+							_debois$elm_mdl$Material_Button$render,
+							_user$project$Main$Mdl,
+							{
+								ctor: '::',
+								_0: 8,
+								_1: {
+									ctor: '::',
+									_0: i + 100,
+									_1: {ctor: '[]'}
+								}
+							},
+							model.mdl,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Button$icon,
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Button$ripple,
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options$onClick(
+											_user$project$Main$DeleteMsg(_p9)),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Icon$i('highlight_off'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				};
+			} else {
+				return {ctor: '[]'};
+			}
+		}();
+		var _p7 = function () {
+			var _p8 = _p10.bool;
+			if (_p8 === true) {
+				return {
+					ctor: '_Tuple3',
+					_0: 'check_box',
+					_1: A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S600),
+					_2: A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S800)
+				};
+			} else {
+				return {
+					ctor: '_Tuple3',
+					_0: 'check_box_outline_blank',
+					_1: A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200),
+					_2: A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S600)
+				};
+			}
+		}();
+		var imageString = _p7._0;
+		var colorTodo = _p7._1;
+		var actionColor = _p7._2;
+		return A2(
+			_debois$elm_mdl$Material_Card$view,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Color$background(colorTodo),
+				_1: {
+					ctor: '::',
+					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Elevation$e2,
+						_1: {
+							ctor: '::',
+							_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Card$text,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A3(
+							_debois$elm_mdl$Material_Options$styled,
+							_elm_lang$html$Html$p,
+							{
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Typography$body1,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(_p10.string),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
 					ctor: '::',
 					_0: A2(
 						_debois$elm_mdl$Material_Card$actions,
@@ -17118,15 +17236,11 @@ var _user$project$Main$renderData = F3(
 							_0: _debois$elm_mdl$Material_Card$border,
 							_1: {
 								ctor: '::',
-								_0: A2(_debois$elm_mdl$Material_Options$css, 'vertical-align', 'center'),
+								_0: A2(_debois$elm_mdl$Material_Options$css, 'display', 'flex'),
 								_1: {
 									ctor: '::',
-									_0: A2(_debois$elm_mdl$Material_Options$css, 'text-align', 'right'),
-									_1: {
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Color$text(_debois$elm_mdl$Material_Color$white),
-										_1: {ctor: '[]'}
-									}
+									_0: _debois$elm_mdl$Material_Color$text(actionColor),
+									_1: {ctor: '[]'}
 								}
 							}
 						},
@@ -17154,111 +17268,21 @@ var _user$project$Main$renderData = F3(
 										_1: {
 											ctor: '::',
 											_0: _debois$elm_mdl$Material_Options$onClick(
-												_user$project$Main$DeleteMsg(_p8)),
+												_user$project$Main$ToggleMsg(_p9)),
 											_1: {ctor: '[]'}
 										}
 									}
 								},
 								{
 									ctor: '::',
-									_0: _debois$elm_mdl$Material_Icon$i('highlight_off'),
+									_0: _debois$elm_mdl$Material_Icon$i(imageString),
 									_1: {ctor: '[]'}
 								}),
-							_1: {ctor: '[]'}
+							_1: deleteAction
 						}),
 					_1: {ctor: '[]'}
-				};
-			} else {
-				return {ctor: '[]'};
-			}
-		}();
-		var card = {
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Card$text,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A3(
-						_debois$elm_mdl$Material_Options$styled,
-						_elm_lang$html$Html$p,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Typography$body1,
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A5(
-								_debois$elm_mdl$Material_Toggles$switch,
-								_user$project$Main$Mdl,
-								{
-									ctor: '::',
-									_0: 0,
-									_1: {
-										ctor: '::',
-										_0: 2,
-										_1: {
-											ctor: '::',
-											_0: i,
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								model.mdl,
-								{
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Options$onToggle(
-										_user$project$Main$ToggleMsg(_p8)),
-									_1: {
-										ctor: '::',
-										_0: _debois$elm_mdl$Material_Toggles$ripple,
-										_1: {
-											ctor: '::',
-											_0: _debois$elm_mdl$Material_Toggles$value(_p9.bool),
-											_1: {ctor: '[]'}
-										}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(_p9.string),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: deleteAction
-		};
-		var colorTodo = function () {
-			var _p7 = _p9.bool;
-			if (_p7 === true) {
-				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S600);
-			} else {
-				return A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$Grey, _debois$elm_mdl$Material_Color$S200);
-			}
-		}();
-		return A2(
-			_debois$elm_mdl$Material_Card$view,
-			{
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Color$background(colorTodo),
-				_1: {
-					ctor: '::',
-					_0: A2(_debois$elm_mdl$Material_Options$css, 'width', '100%'),
-					_1: {
-						ctor: '::',
-						_0: _debois$elm_mdl$Material_Elevation$e2,
-						_1: {
-							ctor: '::',
-							_0: A2(_debois$elm_mdl$Material_Options$css, 'margin', '4px 8px 10px 0px'),
-							_1: {ctor: '[]'}
-						}
-					}
 				}
-			},
-			card);
+			});
 	});
 var _user$project$Main$renderContents = function (model) {
 	return A2(
@@ -17341,7 +17365,7 @@ var _user$project$Main$viewBody = function (model) {
 						model.mdl,
 						{
 							ctor: '::',
-							_0: _debois$elm_mdl$Material_Textfield$label('What needs to be done?'),
+							_0: _debois$elm_mdl$Material_Textfield$label('TODO'),
 							_1: {
 								ctor: '::',
 								_0: _debois$elm_mdl$Material_Textfield$floatingLabel,
