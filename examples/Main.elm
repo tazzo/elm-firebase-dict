@@ -14,6 +14,7 @@ import Material.Layout as Layout
 import Material.Color as Color
 import Material.Card as Card
 import Material.Toggles as Toggles
+import Material.Tooltip as Tooltip
 import Material.Textfield as Textfield
 import Material.Options as Options
 import Material.Options as Options exposing (css)
