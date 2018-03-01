@@ -291,6 +291,7 @@ renderContents model =
     model.fooDict
         |> FDict.toList
         |> List.reverse
+        |> List.sortBy (Tuple.second >> .bool >> toString)
         |> List.indexedMap (renderData model)
 
 

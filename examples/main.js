@@ -17288,8 +17288,17 @@ var _user$project$Main$renderContents = function (model) {
 	return A2(
 		_elm_lang$core$List$indexedMap,
 		_user$project$Main$renderData(model),
-		_elm_lang$core$List$reverse(
-			_user$project$FDict$toList(model.fooDict)));
+		A2(
+			_elm_lang$core$List$sortBy,
+			function (_p11) {
+				return _elm_lang$core$Basics$toString(
+					function (_) {
+						return _.bool;
+					}(
+						_elm_lang$core$Tuple$second(_p11)));
+			},
+			_elm_lang$core$List$reverse(
+				_user$project$FDict$toList(model.fooDict))));
 };
 var _user$project$Main$viewBody = function (model) {
 	var onEnter = function (msg) {
